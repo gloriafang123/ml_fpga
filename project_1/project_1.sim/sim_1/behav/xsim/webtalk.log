@@ -2,12 +2,13 @@
 # Webtalk v2019.2 (64-bit)
 # SW Build 2708876 on Wed Nov  6 21:39:14 MST 2019
 # IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
-# Start of session at: Sun Nov  1 21:07:50 2020
-# Process ID: 1148618
-# Current directory: /home/gloria/Desktop/6111_vivado/final_1/project_1/project_1.sim/sim_1/behav/xsim
-# Command line: wbtcv -mode batch -source /home/gloria/Desktop/6111_vivado/final_1/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/multiply_tb_behav/webtalk/xsim_webtalk.tcl -notrace
-# Log file: /home/gloria/Desktop/6111_vivado/final_1/project_1/project_1.sim/sim_1/behav/xsim/webtalk.log
-# Journal file: /home/gloria/Desktop/6111_vivado/final_1/project_1/project_1.sim/sim_1/behav/xsim/webtalk.jou
+# Start of session at: Tue Nov  3 19:25:38 2020
+# Process ID: 8509
+# Current directory: /home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim
+# Command line: wbtcv -mode batch -source /home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/multiply_tb_behav/webtalk/xsim_webtalk.tcl -notrace
+# Log file: /home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim/webtalk.log
+# Journal file: /home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim/webtalk.jou
 #-----------------------------------------------------------
-source /home/gloria/Desktop/6111_vivado/final_1/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/multiply_tb_behav/webtalk/xsim_webtalk.tcl -notrace
-INFO: [Common 17-206] Exiting Webtalk at Sun Nov  1 21:07:52 2020...
+source /home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/multiply_tb_behav/webtalk/xsim_webtalk.tcl -notrace
+INFO: [Common 17-186] '/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim/xsim.dir/multiply_tb_behav/webtalk/usage_statistics_ext_xsim.xml' has been successfully sent to Xilinx on Tue Nov  3 19:25:40 2020. For additional details about this file, please refer to the WebTalk help file at /tools/Xilinx/Vivado/2019.2/doc/webtalk_introduction.html.
+INFO: [Common 17-206] Exiting Webtalk at Tue Nov  3 19:25:40 2020...
