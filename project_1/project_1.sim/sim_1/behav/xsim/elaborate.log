@@ -1,6 +1,6 @@
 Vivado Simulator 2019.2
 Copyright 1986-1999, 2001-2019 Xilinx, Inc. All Rights Reserved.
-Running: /tools/Xilinx/Vivado/2019.2/bin/unwrapped/lnx64.o/xelab -wto eeeb5cd8cddd4a52a1066384a93aec1b --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot multiply_tb_behav xil_defaultlib.multiply_tb xil_defaultlib.glbl -log elaborate.log 
+Running: /tools/Xilinx/Vivado/2019.2/bin/unwrapped/lnx64.o/xelab -wto eeeb5cd8cddd4a52a1066384a93aec1b --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot neuron_tb_behav xil_defaultlib.neuron_tb xil_defaultlib.glbl -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
@@ -9,6 +9,7 @@ Starting simulation data flow analysis
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
 Compiling module xil_defaultlib.multiplier
-Compiling module xil_defaultlib.multiply_tb
+Compiling module xil_defaultlib.neuron
+Compiling module xil_defaultlib.neuron_tb
 Compiling module xil_defaultlib.glbl
-Built simulation snapshot multiply_tb_behav
+Built simulation snapshot neuron_tb_behav

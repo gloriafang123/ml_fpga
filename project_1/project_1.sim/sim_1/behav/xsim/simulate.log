@@ -1,0 +1,6 @@
+<<<<<<< HEAD
+=======
+Vivado Simulator 2019.2
+Time resolution is 1 ps
+$finish called at time : 130 ns : File "/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/neuron_tb.sv" Line 45
+>>>>>>> fa1e642ddb41decf7eceabb40de06268ef5c91b4
