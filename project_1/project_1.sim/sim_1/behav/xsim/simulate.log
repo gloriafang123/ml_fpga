@@ -1,3 +1,3 @@
 Vivado Simulator 2019.2
 Time resolution is 1 ps
-$finish called at time : 30 ns : File "/home/gloria/Desktop/6111_vivado/final_1/project_1/project_1.srcs/sim_1/new/multiply_tb.sv" Line 40
+$finish called at time : 130 ns : File "/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/neuron_tb.sv" Line 45
