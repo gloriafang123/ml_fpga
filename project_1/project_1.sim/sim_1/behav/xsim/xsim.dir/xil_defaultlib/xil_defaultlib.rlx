@@ -2,13 +2,9 @@
 2019.2
 Nov  6 2019
 21:42:20
-<<<<<<< HEAD
-/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim/glbl.v,1604435898,verilog,,,,glbl,,,,,,,,
-/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.srcs/sim_1/new/multiply_tb.sv,1604449529,systemVerilog,,,,multiply_tb,,,,,,,,
-/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.srcs/sources_1/new/multiplier.sv,1604435898,systemVerilog,,/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.srcs/sim_1/new/multiply_tb.sv,,multiplier,,,,,,,,
-=======
 /home/minimario/Documents/6.111/ml_fpga/project_1/project_1.sim/sim_1/behav/xsim/glbl.v,1604440810,verilog,,,,glbl,,,,,,,,
 /home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/neuron_tb.sv,1604447991,systemVerilog,,,,neuron_tb,,,,,,,,
+/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/relu_tb.sv,1604895018,systemVerilog,,,,relu_tb,,,,,,,,
 /home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sources_1/new/multiplier.sv,1604440810,systemVerilog,,/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sources_1/new/neuron.sv,,multiplier,,,,,,,,
 /home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sources_1/new/neuron.sv,1604447837,systemVerilog,,/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/neuron_tb.sv,,neuron,,,,,,,,
->>>>>>> fa1e642ddb41decf7eceabb40de06268ef5c91b4
+/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sources_1/new/relu.sv,1604895040,systemVerilog,,/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/relu_tb.sv,,relu,,,,,,,,

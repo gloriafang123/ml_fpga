@@ -1,15 +1,4 @@
-<<<<<<< HEAD
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.srcs/sources_1/new/multiplier.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module multiplier
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.srcs/sim_1/new/multiply_tb.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module multiply_tb
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/gloria/Desktop/6111_vivado/final_1_git/project_1/project_1.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module glbl
-=======
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sources_1/new/multiplier.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module multiplier
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sources_1/new/neuron.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module neuron
-INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/neuron_tb.sv" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module neuron_tb
->>>>>>> fa1e642ddb41decf7eceabb40de06268ef5c91b4
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sources_1/new/relu.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module relu
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/minimario/Documents/6.111/ml_fpga/project_1/project_1.srcs/sim_1/new/relu_tb.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module relu_tb
