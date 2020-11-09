@@ -1,0 +1,11 @@
+*
+
+!*.ino
+!*.sv
+!*.sdc
+!*.py
+!*.txt
+!*.md
+!*.pdf
+!.gitignore
+project_1.xpr
