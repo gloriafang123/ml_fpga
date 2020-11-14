@@ -3,9 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
-hidden_size_1 = 5
-hidden_size_2 = 5
+hidden_size_1 = 3
+hidden_size_2 = 3
 
+global max_value
+max_value = 0
 class Net(nn.Module):
 	def __init__(self):
 		super(Net, self).__init__()
@@ -14,25 +16,30 @@ class Net(nn.Module):
 		self.fc3 = nn.Linear(hidden_size_2, 1)
 
 	def forward(self, x):
+		global max_value
+		max_value = max(max_value, torch.max(x))
 		x = F.relu(self.fc1(x))
+		max_value = max(max_value, torch.max(x))
 		x = F.relu(self.fc2(x))
+		max_value = max(max_value, torch.max(x))
 		x = self.fc3(x)
+		max_value = max(max_value, torch.max(x))
 		return x
 
-# torch.manual_seed(100)
+torch.manual_seed(100)
 
 net = Net()
-optimizer = optim.SGD(net.parameters(), lr=0.001)
+optimizer = optim.SGD(net.parameters(), lr=0.003)
 
 print("-- Let's trainnnn uwu -- ")
 for i in range(1000):
 	loss = 0
 	for j in range(100):
-		x = torch.randn(1) * 10
+		x = torch.randn(1)
 		y = x
 		output = net(x)
 		criterion = nn.MSELoss()
-		loss += criterion(output, y) / 100
+		loss += criterion(output, y) / 10
 	optimizer.zero_grad() 
 	loss.backward()
 	# for i in net.parameters():
@@ -45,15 +52,19 @@ for i in range(1000):
 for i in net.parameters():
 	print(i)
 
-print("-- hah testing time -- ")
-loss = 0
-for i in range(100):
-	x = torch.randn(1) * 10
-	y = net(x)
-	print(x, y)
-	loss += nn.MSELoss()(x, y)
-print("Average Evaluation Loss: ", loss/100)
+# print("-- hah testing time -- ")
+# loss = 0
+# for i in range(100):
+# 	x = torch.randn(1)
+# 	y = net(x)
+# 	print(x, y)
+# 	loss += nn.MSELoss()(x, y)
+# print("Average Evaluation Loss: ", loss/100)
 
+# print("Max Value: ", max_value)
+
+for param_tensor in net.state_dict():
+    print(param_tensor, "\t", net.state_dict()[param_tensor])
 
 # dead code
 # import torch
