@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="100389fs"></ZoomEndTime>
-      <Cursor1Time time="23621fs"></Cursor1Time>
+      <ZoomEndTime time="139350fs"></ZoomEndTime>
+      <Cursor1Time time="38370fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="275"></NameColumnWidth>
-      <ValueColumnWidth column_width="105"></ValueColumnWidth>
+      <ValueColumnWidth column_width="201"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="13" />
+   <WVObjectSize size="17" />
    <wvobject type="logic" fp_name="/neural_network_tb/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -28,50 +28,131 @@
       <obj_property name="ElementShortName">rst</obj_property>
       <obj_property name="ObjectShortName">rst</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/x_in">
-      <obj_property name="ElementShortName">x_in[7:0]</obj_property>
-      <obj_property name="ObjectShortName">x_in[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/weights">
-      <obj_property name="ElementShortName">weights[7:0][7:0]</obj_property>
-      <obj_property name="ObjectShortName">weights[7:0][7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/biases">
-      <obj_property name="ElementShortName">biases[3:0][7:0]</obj_property>
-      <obj_property name="ObjectShortName">biases[3:0][7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/output_final">
-      <obj_property name="ElementShortName">output_final[7:0]</obj_property>
-      <obj_property name="ObjectShortName">output_final[7:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+   <wvobject type="logic" fp_name="/neural_network_tb/uut/ready">
+      <obj_property name="ElementShortName">ready</obj_property>
+      <obj_property name="ObjectShortName">ready</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/neural_network_tb/WIDTH">
       <obj_property name="ElementShortName">WIDTH[31:0]</obj_property>
       <obj_property name="ObjectShortName">WIDTH[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/neural_network_tb/DECIMALS">
       <obj_property name="ElementShortName">DECIMALS[31:0]</obj_property>
       <obj_property name="ObjectShortName">DECIMALS[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/uut/output_11">
-      <obj_property name="ElementShortName">output_11[7:0]</obj_property>
-      <obj_property name="ObjectShortName">output_11[7:0]</obj_property>
+   <wvobject type="array" fp_name="/neural_network_tb/weights">
+      <obj_property name="ElementShortName">weights[7:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">weights[7:0][7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/uut/output_12">
-      <obj_property name="ElementShortName">output_12[7:0]</obj_property>
-      <obj_property name="ObjectShortName">output_12[7:0]</obj_property>
+   <wvobject type="array" fp_name="/neural_network_tb/biases">
+      <obj_property name="ElementShortName">biases[3:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">biases[3:0][7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/uut/output_21">
-      <obj_property name="ElementShortName">output_21[7:0]</obj_property>
-      <obj_property name="ObjectShortName">output_21[7:0]</obj_property>
+   <wvobject type="array" fp_name="/neural_network_tb/x_in">
+      <obj_property name="ElementShortName">x_in[7:0]</obj_property>
+      <obj_property name="ObjectShortName">x_in[7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/done_1">
+      <obj_property name="ElementShortName">done_1[1:0]</obj_property>
+      <obj_property name="ObjectShortName">done_1[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/pre_activations_1">
+      <obj_property name="ElementShortName">pre_activations_1[1:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">pre_activations_1[1:0][7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
       <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/neural_network_tb/uut/pre_activations_1[1]">
+         <obj_property name="ElementShortName">[1][7:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][7:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">3</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/neural_network_tb/uut/pre_activations_1[0]">
+         <obj_property name="ElementShortName">[0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][7:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">3</obj_property>
+         <obj_property name="radix_otherWidth">0</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/neural_network_tb/uut/pre_activations_1[1]">
+         <obj_property name="ElementShortName">[1][7:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/neural_network_tb/uut/pre_activations_1[0]">
+         <obj_property name="ElementShortName">[0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][7:0]</obj_property>
+      </wvobject>
    </wvobject>
-   <wvobject type="array" fp_name="/neural_network_tb/uut/output_22">
-      <obj_property name="ElementShortName">output_22[7:0]</obj_property>
-      <obj_property name="ObjectShortName">output_22[7:0]</obj_property>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/output_1">
+      <obj_property name="ElementShortName">output_1[1:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">output_1[1:0][7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/neural_network_tb/uut/ready">
-      <obj_property name="ElementShortName">ready</obj_property>
-      <obj_property name="ObjectShortName">ready</obj_property>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/previous_neurons_2">
+      <obj_property name="ElementShortName">previous_neurons_2[1:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">previous_neurons_2[1:0][7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/done_2">
+      <obj_property name="ElementShortName">done_2[1:0]</obj_property>
+      <obj_property name="ObjectShortName">done_2[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/pre_activations_2">
+      <obj_property name="ElementShortName">pre_activations_2[1:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">pre_activations_2[1:0][7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/output_2">
+      <obj_property name="ElementShortName">output_2[1:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">output_2[1:0][7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/neural_network_tb/output_final">
+      <obj_property name="ElementShortName">output_final[7:0]</obj_property>
+      <obj_property name="ObjectShortName">output_final[7:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">3</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/neural_network_tb/uut/fc_21/previous_neurons">
+      <obj_property name="ElementShortName">previous_neurons[1:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">previous_neurons[1:0][7:0]</obj_property>
    </wvobject>
 </wave_config>

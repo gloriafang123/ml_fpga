@@ -4,10 +4,10 @@ module neuron #(parameter WIDTH = 8, DECIMALS = 3) (
     input clk,
     input rst,
     input logic ready,
-    input logic [1:0] length, // shape of the weight matrix
-    input logic [WIDTH-1:0] weights[1:0], // w[i], TODO(parametrize)
+    input logic [1:0] length, // dimension of weight matrix
+    input logic [1:0] [WIDTH-1:0] weights, // w[i], TODO(parametrize)
     input logic [WIDTH-1:0] bias, // b
-    input logic [WIDTH-1:0] previous_neurons [1:0], // x[i], TODO(parametrize)
+    input logic [1:0] [WIDTH-1:0] previous_neurons, // x[i], TODO(parametrize)
     output logic done,
     output logic [WIDTH-1:0] neuron_output // sum of w[i] x[i] + b
 );

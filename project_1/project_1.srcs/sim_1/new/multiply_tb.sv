@@ -40,7 +40,10 @@ module multiply_tb;
         #10
         assert (product == 8'b01000_010) else $error("bad product");
         // 8.25 = 1000.01
-    
+        x = 8'b00000100; // 0.5
+        y = 8'b11111000; // -1
+        #10
+        // this fails :(
         $finish;
     end
 endmodule
