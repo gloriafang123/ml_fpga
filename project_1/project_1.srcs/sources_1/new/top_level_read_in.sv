@@ -1,0 +1,138 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+
+module top_level_read_in(   
+                    input               clk_100mhz,
+                    input [15:0]        sw,
+                    input [3:0]         jb,
+                    output [1:0]        ja,
+                    input               btnc,
+                    input               btnd,
+                    output logic ca, cb, cc, cd, ce, cf, cg, dp,  // segments a-g, dp
+                    output logic[7:0] an    // Display location 0-7
+    );
+    //DEBUGGING
+    //assign ja[0] = sw[0]; // for debugging, make jb[4] output equal sw[0]
+    // then feed jb[4] into jb[0], which then changes the sw[0]
+    // so when i change sw[0], it should make the 7 seg display bit change
+    // this worked. so the error shouldn't be in jb[0].
+    
+    logic enable;
+    //  initialize sample_data_clk, sample_data_fsm
+    sample_data_clk data_clk(
+        .clk_100mhz(clk_100mhz),
+        .reset(btnd),
+        .enable(enable)
+    );
+    
+    logic output_ready;
+    logic [29:0] output_60_bit;
+    sample_data_fsm data_fsm(
+        .clk_100mhz(clk_100mhz),
+        .enable(enable), // data sample rate
+        .jb_data(jb[0]), // the 16x sampled jb data
+        .reset(btnd),
+        .valid_data(output_ready), //output ready, give 60 sample
+        .z_y_x_hold_output(output_60_bit)
+    );
+    
+    logic[7:0] x;
+    logic valid_x;
+    
+    process_60_bits processor(
+        .z_y_x(output_60_bit),
+        .valid_input(output_ready), // 1 if data from previous stage ready to be read
+        .clk_100mhz(clk_100mhz),
+        .valid_data(valid_x), // 1 if data ready to be read for next stage
+        .x(x)
+    );
+    
+    // display result to the seven seg
+    logic [31:0] value;
+    assign value = {24'b0, x};
+//    assign value = {8'b0, output_60_bit[28:25],output_60_bit[24:21],output_60_bit[18:15],
+//                    output_60_bit[14:11],output_60_bit[8:5],output_60_bit[4:1]};/*{31'b0, jb[0]};*/ /*{24'b0, output_60_bit[8:1]}*/;
+    logic [6:0] segments;
+    assign {cg, cf, ce, cd, cc, cb, ca} = segments[6:0];
+    display_8hex display(.clk_in(clk_100mhz), .data_in(value), .seg_out(segments), .strobe_out(an));
+    
+endmodule
+
+
+
+module display_8hex(
+    input clk_in,                 // system clock
+    input [31:0] data_in,         // 8 hex numbers, msb first
+    output logic [6:0] seg_out,     // seven segment display output
+    output logic [7:0] strobe_out   // digit strobe
+    );
+
+    localparam bits = 13;
+     
+    logic [bits:0] counter = 0;  // clear on power up
+     
+    logic [6:0] segments[15:0]; // 16 7 bit memorys
+    assign segments[0]  = 7'b100_0000;  // inverted logic
+    assign segments[1]  = 7'b111_1001;  // gfedcba
+    assign segments[2]  = 7'b010_0100;
+    assign segments[3]  = 7'b011_0000;
+    assign segments[4]  = 7'b001_1001;
+    assign segments[5]  = 7'b001_0010;
+    assign segments[6]  = 7'b000_0010;
+    assign segments[7]  = 7'b111_1000;
+    assign segments[8]  = 7'b000_0000;
+    assign segments[9]  = 7'b001_1000;
+    assign segments[10] = 7'b000_1000;
+    assign segments[11] = 7'b000_0011;
+    assign segments[12] = 7'b010_0111;
+    assign segments[13] = 7'b010_0001;
+    assign segments[14] = 7'b000_0110;
+    assign segments[15] = 7'b000_1110;
+     
+    always_ff @(posedge clk_in) begin
+      // Here I am using a counter and select 3 bits which provides
+      // a reasonable refresh rate starting the left most digit
+      // and moving left.
+      counter <= counter + 1;
+      case (counter[bits:bits-2])
+          3'b000: begin  // use the MSB 4 bits
+                  seg_out <= segments[data_in[31:28]];
+                  strobe_out <= 8'b0111_1111 ;
+                 end
+
+          3'b001: begin
+                  seg_out <= segments[data_in[27:24]];
+                  strobe_out <= 8'b1011_1111 ;
+                 end
+
+          3'b010: begin
+                   seg_out <= segments[data_in[23:20]];
+                   strobe_out <= 8'b1101_1111 ;
+                  end
+          3'b011: begin
+                  seg_out <= segments[data_in[19:16]];
+                  strobe_out <= 8'b1110_1111;        
+                 end
+          3'b100: begin
+                  seg_out <= segments[data_in[15:12]];
+                  strobe_out <= 8'b1111_0111;
+                 end
+
+          3'b101: begin
+                  seg_out <= segments[data_in[11:8]];
+                  strobe_out <= 8'b1111_1011;
+                 end
+
+          3'b110: begin
+                   seg_out <= segments[data_in[7:4]];
+                   strobe_out <= 8'b1111_1101;
+                  end
+          3'b111: begin
+                  seg_out <= segments[data_in[3:0]];
+                  strobe_out <= 8'b1111_1110;
+                 end
+
+       endcase
+      end
+
+endmodule
