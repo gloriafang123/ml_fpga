@@ -66,28 +66,28 @@ for i in net.parameters():
 for param_tensor in net.state_dict():
     print(param_tensor, "\t", net.state_dict()[param_tensor])
 
-# dead code
-# import torch
-# x = torch.ones([1, 1], requires_grad=False)
+weights = []
+biases = []
+d = net.state_dict()
+keys = list(d)
+for param_name in keys:
+	if 'weight' in param_name:
+		weights.append(d[param_name].numpy().flatten().tolist())
+	elif 'bias' in param_name:
+		biases.append(d[param_name].numpy().flatten().tolist())
 
-# # weights[0] and weights[1]
-# w1 = torch.ones([2, 1], requires_grad=True)
-# b1 = torch.ones([2, 1], requires_grad=True)
+def flatten(l):
+	l_flat = []
+	for i in l:
+		l_flat += i
+	return l_flat 
 
-# relu = torch.nn.ReLU()
+weights_flat = flatten(weights)
+biases_flat = flatten(biases)
 
-# preact1 = torch.mm(w1, x) + b1
-# output1 = relu(preact1)
+# pickle everything
+import pickle
+pickle.dump((weights_flat, biases_flat), open("identity_weights.pkl", "wb"))
 
-# w2 = torch.ones([2, 2], requires_grad=True)
-# b2 = torch.ones([2, 1], requires_grad=True)
-
-# preact2 = torch.mm(w2, output1) + b2
-# output2 = relu(preact2)
-
-# print(output2)
-# w3 = torch.ones([1, 2], requires_grad=True)
-# output_final = torch.mm(w3, output2)
-
-# loss = (output_final - x) ** 2
-# loss.backward()
+# to load things from pickle
+# weights_flat, biases_flat = pickle.load(open("identity_weights.pkl", "rb"))
