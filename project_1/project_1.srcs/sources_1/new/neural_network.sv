@@ -60,7 +60,7 @@ assign nn_weights[2][0][2:0] = weights[14:12];
 // layer i, neuron j
 logic [NEURONS_PER_LAYER-1:0][WIDTH-1:0] nn_biases [HIDDEN_LAYERS+1:0];
 assign nn_biases[0][2:0] = biases[2:0];
-assign nn_biases[1][3:0] = biases[5:3];
+assign nn_biases[1][2:0] = biases[5:3];
 assign nn_biases[2][0] = biases[6];
 
 // outputs for each layer except last layer (which feeds to output of the module)
