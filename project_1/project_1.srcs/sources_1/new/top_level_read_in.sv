@@ -77,8 +77,22 @@ module top_level_read_in(
 //   output logic [WIDTH-1:0] output_final,
 //   output logic done
 //);
+   
+   logic [7:0] x_in;
+   assign x_in = 9;//8 bit input
+   logic [7:0] output_final;
+   logic done;
     
-    
+   neural_network #(.WIDTH(8), .DECIMALS(3)) nn (
+       .clk(clk_100mhz),
+       .rst(btnd), //randomly made this btnd the reset for now
+       .ready(weights_biases_ready),
+       .x_in(x_in),
+       .weights(weights),
+       .biases(biases),
+       .output_final(output_final),
+       .done(done)
+    );
     
     // display result to the seven seg
     assign led[0] = valid_x;
@@ -86,8 +100,7 @@ module top_level_read_in(
     logic [31:0] value;
     assign value = {
     //22'b0, output_ready, valid_x, x
-                    6'b0, valid_x, output_ready, weights[5][3:0], weights[4][3:0],
-                    weights[3][3:0], weights[2][3:0], weights[1][3:0], weights[0][3:0]
+                    16'b0, biases[6][3:0], weights[14][3:0], x_in[3:0], output_final[3:0]
                 };
 //    assign value = {24'b0, x};
 //    assign value = {8'b0, output_60_bit[28:25],output_60_bit[24:21],output_60_bit[18:15],
