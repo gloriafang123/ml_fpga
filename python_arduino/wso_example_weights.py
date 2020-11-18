@@ -51,31 +51,41 @@ else:
 
 #when we use actual weights, we need replace with 8 bit, 2-complement
     # so multiply by 2**3, and convert to 2 complement
-test_weights = [
-    7 ,
-    5 ,
-    4 ,
-    2 ,
-    4 ,
-    3 ,
-    0 ,
-    4 ,
-    7 ,
-    5 ,
-    1 ,
-    3 ,
-    3 ,
-    8 ,
-    6 ,
-    #]
-#test_biases = [ # for now im combining in 1 array.
-    1 ,
-    2 ,
-    8 ,
-    4 ,
-    7 ,
-    2 ,
-    16 ]
+
+def byte_complement_numerical(a, decimal_bits):
+    if (a>=0):
+        return round(a*2**decimal_bits)
+    else:
+        return 2**8 + round(a*2**decimal_bits)
+
+weights_flat = [-0.8665638566017151,
+    0.6557906270027161,
+    -0.5218384265899658,
+    -0.28233784437179565,
+    -0.4885070025920868,
+    -0.32910528779029846,
+    0.010338354855775833,
+    -0.5161469578742981,
+    0.836385190486908,
+    0.6438896059989929,
+    -0.15287162363529205,
+    0.3964228332042694,
+    -0.32670411467552185,
+    -0.9649538397789001,
+    -0.7213608622550964]
+biases_flat = [-0.11776574701070786,
+    0.1936546117067337,
+    0.9877633452415466,
+    0.5106937885284424,
+    0.8385142683982849,
+    0.2501280903816223,
+    1.9905645847320557]
+
+test_weights = [] # weights and biases
+for w in weights_flat:
+    test_weights.append(byte_complement_numerical(w, 3)) # decimal bits for now
+for b in biases_flat:
+    test_weights.append(byte_complement_numerical(b, 3))
 
 try:
     print("Writing...")
