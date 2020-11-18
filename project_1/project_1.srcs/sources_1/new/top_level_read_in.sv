@@ -66,17 +66,10 @@ module top_level_read_in(
         .output_ready(weights_biases_ready)
     );
     
-    //ready = weights_biases_ready
-//    module neural_network #(parameter WIDTH = 8, DECIMALS = 3) (
-//   input clk,
-//   input rst,
-//   input logic ready,
-//   input logic [WIDTH-1:0] x_in,
-//   input logic [14:0] [WIDTH-1:0] weights,
-//   input logic [6:0] [WIDTH-1:0] biases,
-//   output logic [WIDTH-1:0] output_final,
-//   output logic done
-//);
+// TODO
+// debounce btnd, btnc,
+// also wire btnu OR weights_biases_ready to nn's .ready()
+// that way i dont have to send weights just to turn ready() signal on (to run nn)
    
    logic [7:0] x_in;
    assign x_in = sw[7:0];//8'b0_0011_000;//8 bit input
