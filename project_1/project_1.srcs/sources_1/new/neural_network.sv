@@ -1,162 +1,131 @@
 `timescale 1ns / 1ps
 
+// 3 layer identity
+// 3 x 1, 3 x 1
+// 3 x 3, 3 x 1
+// 3 x 1, 1 x 1
+
+//fc1.weight 	 
+// tensor([[-0.8666],
+//             [ 0.6558],
+//             [-0.5218]])
+
+// fc1.bias 	 tensor([-0.1178,  0.1937,  0.9878])
+
+//fc2.weight 	 
+// tensor([[-0.2823, -0.4885, -0.3291],
+//             [ 0.0103, -0.5161,  0.8364],
+//             [ 0.6439, -0.1529,  0.3964]])
+
+//fc2.bias 	 tensor([0.5107, 0.8385, 0.2501])
+
+//fc3.weight 	 tensor([[-0.3267, -0.9650, -0.7214]])
+
+//fc3.bias 	 tensor([1.9906])
+
 module neural_network #(parameter WIDTH = 8, DECIMALS = 3) (
    input clk,
    input rst,
    input logic ready,
    input logic [WIDTH-1:0] x_in,
-   input logic [WIDTH-1:0] weights[7:0],
-   input logic [WIDTH-1:0] biases[3:0],
+   input logic [14:0] [WIDTH-1:0] weights,
+   input logic [6:0] [WIDTH-1:0] biases,
    output logic [WIDTH-1:0] output_final,
    output logic done
 );
 
-// layer 1 neuron 1
-logic [1:0]            length_11;
-logic [WIDTH-1:0] weights_11[1:0];
-logic [WIDTH-1:0] bias_11;
-logic [WIDTH-1:0] previous_neurons_11 [1:0];
-logic [WIDTH-1:0] pre_activations_11;
-logic [WIDTH-1:0] output_11;
-logic done_11;
+// layer 1
+localparam HIDDEN_LAYERS = 1;
+localparam NEURONS_PER_LAYER = 3;
 
-assign length_11 = 2'b01;
-assign weights_11[0] = weights[0];
-assign bias_11 = biases[0];
-assign previous_neurons_11[0] = x_in;
+// length = # of neurons in previous layer = 1
+logic [1:0] lengths[HIDDEN_LAYERS+1:0];
+assign lengths = {2'b11, 2'b11, 2'b01};
 
-neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) fc_11 (
-    .clk(clk),
-    .rst(rst),
-    .ready(ready),
-    .length(length_11), // only 1 previous neuron
-    .weights(weights_11),
-    .bias(bias_11),
-    .previous_neurons(previous_neurons_11),
-    .neuron_output(pre_activations_11),
-    .done(done_11)
-);
+// layer i, neuron j, field k
+logic [NEURONS_PER_LAYER-1:0] [NEURONS_PER_LAYER-1:0][WIDTH-1:0] nn_weights [HIDDEN_LAYERS+1:0];
+// first layer weights only 3x1
+assign nn_weights[0][0][0] = weights[0]; 
+assign nn_weights[0][1][0] = weights[1];
+assign nn_weights[0][2][0] = weights[2];
 
-relu #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) relu_11 (
-    .relu_in(pre_activations_11),
-    .relu_out(output_11)
-);
+// hidden layer weights 3x3
+assign nn_weights[1][0][2:0] = weights[5:3];
+assign nn_weights[1][1][2:0] = weights[8:6];
+assign nn_weights[1][2][2:0] = weights[11:9];
 
-// layer 1 neuron 2
-logic [1:0]            length_12;
-logic [WIDTH-1:0] weights_12[1:0];
-logic [WIDTH-1:0] bias_12;
-logic [WIDTH-1:0] previous_neurons_12 [1:0];
-logic [WIDTH-1:0] pre_activations_12;
-logic [WIDTH-1:0] output_12;
-logic done_12;
-assign length_12 = 2'b01;
-assign weights_12[0] = weights[1];
-assign bias_12 = biases[1];
-assign previous_neurons_12[0] = x_in;
+// last layer weights 3x1
+assign nn_weights[2][0][2:0] = weights[14:12];
 
-neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) fc_12 (
-    .clk(clk),
-    .rst(rst),
-    .ready(ready),
-    .length(length_12), // only 1 previous neuron
-    .weights(weights_12),
-    .bias(bias_12),
-    .previous_neurons(previous_neurons_12),
-    .neuron_output(pre_activations_12),
-    .done(done_12)
-);
+// layer i, neuron j
+logic [NEURONS_PER_LAYER-1:0][WIDTH-1:0] nn_biases [HIDDEN_LAYERS+1:0];
+assign nn_biases[0][2:0] = biases[2:0];
+assign nn_biases[1][3:0] = biases[5:3];
+assign nn_biases[2][0] = biases[6];
 
-relu #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) relu_12 (
-    .relu_in(pre_activations_12),
-    .relu_out(output_12)
-);
+// outputs for each layer except last layer (which feeds to output of the module)
+logic [NEURONS_PER_LAYER-1:0] [WIDTH-1:0] nn_pre_activations [HIDDEN_LAYERS+1:0];
+logic [NEURONS_PER_LAYER-1:0] [WIDTH-1:0] nn_output [HIDDEN_LAYERS+1:0];
 
-// layer 2 neuron 1
-logic [1:0]            length_21;
-logic [WIDTH-1:0] weights_21[1:0];
-logic [WIDTH-1:0] bias_21;
-logic [WIDTH-1:0] previous_neurons_21 [1:0];
-logic [WIDTH-1:0] pre_activations_21;
-logic [WIDTH-1:0] output_21;
-logic done_21;
-assign length_21 = 2'b10;
-assign weights_21[1:0] = weights[3:2];
-assign bias_21 = biases[2];
-assign previous_neurons_21[1] = output_12;
-assign previous_neurons_21[0] = output_11;
+// layer i, neuron j is done
+logic [NEURONS_PER_LAYER-1:0] nn_done [HIDDEN_LAYERS+1:0] ;
 
-neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) fc_21 (
-    .clk(clk),
-    .rst(rst),
-    .ready(done_11 & done_12), // watch out if previous layers are not identical
-    .length(length_21),
-    .weights(weights_21),
-    .bias(bias_21),
-    .previous_neurons(previous_neurons_21),
-    .neuron_output(pre_activations_21),
-    .done(done_21)
-);
+// previous neurons that feed to next neuron
+logic [NEURONS_PER_LAYER-1:0] [WIDTH-1:0] nn_previous_neurons [HIDDEN_LAYERS+1:0];
+assign nn_previous_neurons[0][0] = x_in; 
+assign nn_previous_neurons[1] = nn_output[0];
+assign nn_previous_neurons[2] = nn_output[1];
 
-relu #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) relu_21 (
-    .relu_in(pre_activations_21),
-    .relu_out(output_21)
-);
+// first layer
+genvar i;
+generate
+    for (i=0; i<NEURONS_PER_LAYER; i=i+1) begin         
+        neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) fc_initial (
+            .clk(clk), .rst(rst), .ready(ready),
+            .length(lengths[0]), 
+            .weights(nn_weights[0][i]), .bias(nn_biases[0][i]), .previous_neurons(nn_previous_neurons[0]),
+            .neuron_output(nn_pre_activations[0][i]),
+            .done(nn_done[0][i])
+        );
+        
+        relu #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) relu_initial (
+            .relu_in(nn_pre_activations[0][i]), .relu_out(nn_output[0][i])
+        );
+     end
+endgenerate
 
-// layer 2 neuron 2
-logic [1:0]            length_22;
-logic [WIDTH-1:0] weights_22[1:0];
-logic [WIDTH-1:0] bias_22;
-logic [WIDTH-1:0] previous_neurons_22 [1:0];
-logic [WIDTH-1:0] pre_activations_22;
-logic [WIDTH-1:0] output_22;
-logic done_22;
-
-assign length_22 = 2'b10;
-assign weights_22[1:0] = weights[5:4];
-assign bias_22 = biases[3];
-assign previous_neurons_22[1] = output_12;
-assign previous_neurons_22[0] = output_11;
-
-neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) fc_22 (
-    .clk(clk),
-    .rst(rst),
-    .ready(done_11 & done_12), // watch out if previous layers aren't identical
-    .length(length_22),
-    .weights(weights_22),
-    .bias(bias_22),
-    .previous_neurons(previous_neurons_22),
-    .neuron_output(pre_activations_22),
-    .done(done_22)
-);
-
-relu #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) relu_22 (
-    .relu_in(pre_activations_22),
-    .relu_out(output_22)
-);
+// intermediate layers
+genvar j;
+generate
+    for (j=1; j<1+HIDDEN_LAYERS; j=j+1) begin
+        for (i=0; i<NEURONS_PER_LAYER; i=i+1) begin
+            neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) fc_hidden (
+                .clk(clk), .rst(rst), .ready(nn_done[j-1][0] && nn_done[j-1][1] && nn_done[j-1][2]), // remember to change this
+                .length(lengths[j]), 
+                .weights(nn_weights[j][i]), .bias(nn_biases[j][i]), .previous_neurons(nn_previous_neurons[j]),
+                .neuron_output(nn_pre_activations[j][i]),
+                .done(nn_done[j][i])
+            );
+            relu #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) relu_hidden (
+                .relu_in(nn_pre_activations[j][i]), .relu_out(nn_output[j][i])
+            );
+         end
+      end
+endgenerate
 
 // final layer
-logic [1:0]            length_final;
-logic [WIDTH-1:0] weights_final[1:0];
-logic [WIDTH-1:0] bias_final;
-logic [WIDTH-1:0] previous_neurons_final [1:0];
-
-assign length_final = 2'b10;
-assign weights_final[1:0] = weights[7:6];
-assign bias_final = 0; // no bias for final layer
-assign previous_neurons_final[1] = output_22;
-assign previous_neurons_final[0] = output_21;
-
 neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) fc_final (
-    .clk(clk),
-    .rst(rst),
-    .ready(done_21 & done_22),
-    .length(length_final),
-    .weights(weights_final),
-    .bias(bias_final),
-    .previous_neurons(previous_neurons_final),
-    .neuron_output(output_final),
-    .done(done)
+    .clk(clk), .rst(rst), .ready(nn_done[HIDDEN_LAYERS][0] && nn_done[HIDDEN_LAYERS][1] && nn_done[HIDDEN_LAYERS][2]), // change this
+    .length(lengths[HIDDEN_LAYERS+1]),
+    .weights(nn_weights[HIDDEN_LAYERS+1][0]), 
+    .bias(nn_biases[HIDDEN_LAYERS+1][0]), 
+    .previous_neurons(nn_previous_neurons[HIDDEN_LAYERS+1]),
+    .neuron_output(nn_pre_activations[HIDDEN_LAYERS+1][0]),
+    .done(nn_done[HIDDEN_LAYERS+1][0])
 );
+
+assign nn_output[HIDDEN_LAYERS+1][0] = nn_pre_activations[HIDDEN_LAYERS+1][0];
+assign output_final = nn_output[HIDDEN_LAYERS+1][0];
+assign done = nn_done[HIDDEN_LAYERS+1][0];
 
 endmodule

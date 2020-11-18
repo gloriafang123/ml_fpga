@@ -36,11 +36,11 @@ s = get_usb_port()  #grab a port
 print("USB Port: "+str(s)) #print it if you got
 if s:
     ser = serial.Serial(port = s,
-        baudrate=115200,
+        baudrate=9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,    # NOTE this is set at totally 8 bits - max in pyserial
-        timeout=0.01) #auto-connects already?
+        timeout=0.1) #auto-connects already?
     print("Serial Connected!")
     if ser.isOpen():
          print(ser.name + ' is open...')
@@ -53,15 +53,21 @@ try:
     counter = 0
     total_bytes = 0
     while True:
+        try:
+            x = ser.read() #reads 1 byte
+            if len(x)!=0:
+              print(int.from_bytes(x, byteorder='little', signed=True))
+        except Exception as e:
+            print(e)
        # ser.flush()
         bytes_written = ser.write(counter.to_bytes(1, 'little'))
+        bytes_written = ser.write(counter.to_bytes(1, 'little'))
+        #bytes_written = ser.write(str(counter).encode('ascii'))
         #note need to write it as 8 bit output?
         counter += 1
-        counter = counter%100
+        counter = counter%10
         total_bytes += bytes_written
-        print (counter, bytes_written, total_bytes)
-        sleep(0.0001) # because baud 115200 so need 0.00008s to send 10 bit
-    count = 0
+        # print (counter, bytes_written, total_bytes)
 # this version currently works
 
 ##    count = 0
