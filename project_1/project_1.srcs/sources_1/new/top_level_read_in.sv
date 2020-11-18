@@ -79,7 +79,7 @@ module top_level_read_in(
 //);
    
    logic [7:0] x_in;
-   assign x_in = 9;//8 bit input
+   assign x_in = 1;//8 bit input
    logic [7:0] output_final;
    logic done;
     
