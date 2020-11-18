@@ -139,7 +139,7 @@ module process_60_bits (
     output logic [7:0] x
 );
 
-    logic [15:0] x_16;
+/*    logic [15:0] x_16;*/
 //    logic [15:0] y_16;
     always_comb begin
         // data in this stage only ready if prev module ready, and if start/end bits correct
@@ -154,12 +154,14 @@ module process_60_bits (
             valid_data = 0;
         end
         
-        x_16 = z_y_x[8:1];
+      /*  x_16 = z_y_x[8:1];*/
+      x = z_y_x[8:1];
 
     end
-    
+  /*  
     always_ff @(posedge clk_100mhz) begin
             x <= x_16; // 13 bits
 //            y <= y_16[15:3];
     end
+    */
 endmodule

@@ -15,6 +15,8 @@ module gather_weights_into_one_array(
     logic state; //1 if gathering
     // start gathering when start_gathering is true
     // end gathering when weights and biases are filled
+    // state 0 do nothing
+    
     logic [6:0] input_counter;
     
     always_ff @(posedge clk_100mhz) begin
