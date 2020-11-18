@@ -63,10 +63,11 @@ module sample_data_fsm (
     logic [5:0] filled_30; // 1 to 60 //30 is 3 bytes
     
     always_ff @(posedge clk_100mhz) begin
-        
+        valid_data <= 0; // nov 17 added bc need it to be 1 clk pulse not 1 enable pulse
         if (enable) begin // sample rate
             case (state)
                 HIGH_2MS: begin
+                    valid_data <= 0; //nov 17 added
                     if (jb_data == 1) begin //high
                         counter_2ms <= counter_2ms + 1;
                     end else begin // low, reset counter
@@ -80,6 +81,7 @@ module sample_data_fsm (
                     end
                 end
                 START_PULSE: begin 
+                    valid_data <= 0;
                     jb_16 <= {jb_data, jb_16[15:1]}; // shift down right
                     // pulse detected (high to low
                     if (jb_16 == 16'b0000_0000_1111_1111) begin
@@ -146,13 +148,13 @@ module process_60_bits (
 //            valid_data = ({z_y_x[0], z_y_x[10], z_y_x[20], z_y_x[30], z_y_x[40], z_y_x[50]} == 6'b00_0000)
 //                        &&
 //                        ({z_y_x[9],z_y_x[19], z_y_x[29] ,z_y_x[39],z_y_x[49],z_y_x[59]} == 6'b11_1111);
-            valid_data = ({z_y_x[0],z_y_x[10]}==2'b00) && ({z_y_x[9], z_y_x[19]}==2'b11);
+            valid_data = (z_y_x[0] == 0) && (z_y_x[9] == 1);//({z_y_x[0],z_y_x[10]}==2'b00) && ({z_y_x[9], z_y_x[19]}==2'b11);
             
         end else begin
             valid_data = 0;
         end
         
-            x_16 = z_y_x[8:1];
+        x_16 = z_y_x[8:1];
 
     end
     

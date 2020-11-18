@@ -37,7 +37,7 @@ module gather_weights_into_one_array(
                 // do this inside valid_input only
                 if ((input_counter + 1) == 22) begin //15+7
                     state <= 0;
-                    output_ready <= 1;
+                    output_ready <= 1; // pulse
                 end
             end
             

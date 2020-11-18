@@ -9,7 +9,8 @@ module top_level_read_in(
                     input               btnc,
                     input               btnd,
                     output logic ca, cb, cc, cd, ce, cf, cg, dp,  // segments a-g, dp
-                    output logic[7:0] an    // Display location 0-7
+                    output logic[7:0] an,    // Display location 0-7
+                    output logic [15:0] led
     );
     //DEBUGGING
     //assign ja[0] = sw[0]; // for debugging, make jb[4] output equal sw[0]
@@ -37,7 +38,7 @@ module top_level_read_in(
     );
     
     logic[7:0] x;
-    logic valid_x;
+    logic valid_x; // not necessarily a pulse
     
     process_60_bits processor(
         .z_y_x(output_60_bit),
@@ -58,18 +59,37 @@ module top_level_read_in(
     gather_weights_into_one_array uut(
         .clk_100mhz(clk_100mhz),
         .start_gathering(btnc), //btnc
-        .valid_input(valid_x), // bit true if valid
+        .valid_input(valid_x & output_ready), // bit true if valid, and only look at when new input comes in
         .x(x), // input to gather
         .weights(weights),
         .biases(biases),
         .output_ready(weights_biases_ready)
     );
     
+    //ready = weights_biases_ready
+//    module neural_network #(parameter WIDTH = 8, DECIMALS = 3) (
+//   input clk,
+//   input rst,
+//   input logic ready,
+//   input logic [WIDTH-1:0] x_in,
+//   input logic [14:0] [WIDTH-1:0] weights,
+//   input logic [6:0] [WIDTH-1:0] biases,
+//   output logic [WIDTH-1:0] output_final,
+//   output logic done
+//);
+    
     
     
     // display result to the seven seg
+    assign led[0] = valid_x;
+    assign led[1] = output_ready;
     logic [31:0] value;
-    assign value = {24'b0, x};
+    assign value = {
+    //22'b0, output_ready, valid_x, x
+                    6'b0, valid_x, output_ready, weights[5][3:0], weights[4][3:0],
+                    weights[3][3:0], weights[2][3:0], weights[1][3:0], weights[0][3:0]
+                };
+//    assign value = {24'b0, x};
 //    assign value = {8'b0, output_60_bit[28:25],output_60_bit[24:21],output_60_bit[18:15],
 //                    output_60_bit[14:11],output_60_bit[8:5],output_60_bit[4:1]};/*{31'b0, jb[0]};*/ /*{24'b0, output_60_bit[8:1]}*/;
     logic [6:0] segments;

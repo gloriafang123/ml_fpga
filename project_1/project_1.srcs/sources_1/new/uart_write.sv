@@ -10,13 +10,13 @@ module top_level(   input               clk_100mhz,
                     input [15:0]        sw,
                     input               btnc,
                     input               btnd,
-                    output logic [15:0] led,
+                    //output logic [15:0] led,
                     output logic [1:0]  ja
     );
     
     logic               clean;
     logic               old_clean;
-    assign led = sw;
+    //assign led = sw;
     assign ja[1] = 0; //just assign this to be 0
     
     logic input_ready;
