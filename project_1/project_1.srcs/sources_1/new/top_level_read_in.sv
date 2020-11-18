@@ -47,6 +47,26 @@ module top_level_read_in(
         .x(x)
     );
     
+    // x is the bytes
+    
+    
+    logic weights_biases_ready;
+    logic [14:0] [7:0] weights ;
+    logic [6:0] [7:0] biases ;
+    // new module that gathers the next 15+7 = 22 bits and saves those as weights/biases
+    // starts gathering when we press C, a hacky/dumb approach right now
+    gather_weights_into_one_array uut(
+        .clk_100mhz(clk_100mhz),
+        .start_gathering(btnc), //btnc
+        .valid_input(valid_x), // bit true if valid
+        .x(x), // input to gather
+        .weights(weights),
+        .biases(biases),
+        .output_ready(weights_biases_ready)
+    );
+    
+    
+    
     // display result to the seven seg
     logic [31:0] value;
     assign value = {24'b0, x};
