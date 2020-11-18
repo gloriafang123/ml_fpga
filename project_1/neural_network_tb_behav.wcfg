@@ -3,36 +3,45 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="multiply_tb_behav.wdb" id="1">
+      <db_ref path="gather_weights_to_nn_tb_behav.wdb" id="1">
          <top_modules>
+            <top_module name="gather_weights_to_nn_tb" />
             <top_module name="glbl" />
-            <top_module name="multiply_tb" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="8333fs"></ZoomStartTime>
-      <ZoomEndTime time="58334fs"></ZoomEndTime>
-      <Cursor1Time time="50000fs"></Cursor1Time>
+      <ZoomStartTime time="122864fs"></ZoomStartTime>
+      <ZoomEndTime time="427126fs"></ZoomEndTime>
+      <Cursor1Time time="398401fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="93"></NameColumnWidth>
+      <NameColumnWidth column_width="89"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="3" />
-   <wvobject type="array" fp_name="/multiply_tb/uut/product">
-      <obj_property name="ElementShortName">product[7:0]</obj_property>
-      <obj_property name="ObjectShortName">product[7:0]</obj_property>
-      <obj_property name="Radix">BINARYRADIX</obj_property>
+   <WVObjectSize size="6" />
+   <wvobject type="logic" fp_name="/gather_weights_to_nn_tb/done">
+      <obj_property name="ElementShortName">done</obj_property>
+      <obj_property name="ObjectShortName">done</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/multiply_tb/uut/y">
-      <obj_property name="ElementShortName">y[7:0]</obj_property>
-      <obj_property name="ObjectShortName">y[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   <wvobject type="array" fp_name="/gather_weights_to_nn_tb/output_final">
+      <obj_property name="ElementShortName">output_final[7:0]</obj_property>
+      <obj_property name="ObjectShortName">output_final[7:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/multiply_tb/uut/x">
-      <obj_property name="ElementShortName">x[7:0]</obj_property>
-      <obj_property name="ObjectShortName">x[7:0]</obj_property>
-      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   <wvobject type="array" fp_name="/gather_weights_to_nn_tb/x_in">
+      <obj_property name="ElementShortName">x_in[7:0]</obj_property>
+      <obj_property name="ObjectShortName">x_in[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/gather_weights_to_nn_tb/weights">
+      <obj_property name="ElementShortName">weights[14:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">weights[14:0][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/gather_weights_to_nn_tb/biases">
+      <obj_property name="ElementShortName">biases[6:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">biases[6:0][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/gather_weights_to_nn_tb/weights_biases_ready">
+      <obj_property name="ElementShortName">weights_biases_ready</obj_property>
+      <obj_property name="ObjectShortName">weights_biases_ready</obj_property>
    </wvobject>
 </wave_config>

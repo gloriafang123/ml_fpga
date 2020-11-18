@@ -20,13 +20,13 @@ module gather_weights_into_one_array(
     logic [6:0] input_counter;
     
     always_ff @(posedge clk_100mhz) begin
+        output_ready <= 0; // only pulses to 1 if ready
         if (start_gathering) begin
             state <= 1; //gathering
             input_counter <= 0;
-            output_ready <= 0;
         end
         if (state == 1) begin
-            output_ready <= 0;
+            
             if (valid_input) begin
                 input_counter <= input_counter + 1;
                 if (input_counter <= 14) begin

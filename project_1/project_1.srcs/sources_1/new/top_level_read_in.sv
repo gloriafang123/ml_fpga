@@ -79,7 +79,7 @@ module top_level_read_in(
 //);
    
    logic [7:0] x_in;
-   assign x_in = 1;//8 bit input
+   assign x_in = 8'b0_0011_000;//8 bit input
    logic [7:0] output_final;
    logic done;
     
@@ -100,7 +100,7 @@ module top_level_read_in(
     logic [31:0] value;
     assign value = {
     //22'b0, output_ready, valid_x, x
-                    16'b0, biases[6][3:0], weights[14][3:0], x_in[3:0], output_final[3:0]
+                    16'b0, biases[6][3:0], weights[14][3:0], x_in[5:3], output_final[5:3]
                 };
 //    assign value = {24'b0, x};
 //    assign value = {8'b0, output_60_bit[28:25],output_60_bit[24:21],output_60_bit[18:15],
