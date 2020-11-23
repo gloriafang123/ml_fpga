@@ -42,3 +42,12 @@ def generate_verilog_testbench_weights():
 
     for i in range(7):
         print('biases[{}] = 8\'b{};'.format(i, int_to_bin(l[15+i])))
+
+def generate_iris_null_weights():
+    for i in range(30):
+        print('        weights[{}] = 8\'b{};'.format(i, '0_0000_001'))
+
+    for i in range(9):
+        print('        biases[{}] = 8\'b{};'.format(i, '0_0000_001'))
+
+generate_iris_null_weights()

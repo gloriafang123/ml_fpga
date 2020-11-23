@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
-module neuron #(parameter WIDTH = 8, DECIMALS = 3, NEURONS_PER_LAYER = 3) (
+module neuron #(parameter WIDTH = 8, DECIMALS = 3, NEURONS_PER_LAYER = 3, LOG_LENGTH = 2) (
     input clk,
     input rst,
     input logic ready,
-    input logic [1:0] length, // dimension of weight matrix
+    input logic [LOG_LENGTH-1:0] length, // dimension of weight matrix
     input logic [NEURONS_PER_LAYER-1:0] [WIDTH-1:0] weights, // w[i], TODO(parametrize)
     input logic [WIDTH-1:0] bias, // b
     input logic [NEURONS_PER_LAYER-1:0] [WIDTH-1:0] previous_neurons, // x[i], TODO(parametrize)
