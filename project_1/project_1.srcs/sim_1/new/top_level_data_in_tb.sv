@@ -34,146 +34,110 @@ module top_level_data_in_tb(
         #1;  //every 5 ns switch...so period of clock is 10 ns...100 MHz clock
         clk_100mhz = !clk_100mhz;
     end
-    
     initial begin
         clk_100mhz = 0;
         btnd = 1;
+        btnc = 1;
         #10
         btnd = 0;
+        btnc = 0;
         jb[0] = 1;
-        #99945 //62*806, *2 bc clk
+        #(2*651*308) //62*806, *2 bc clk   2*651*868
         jb[0] = 1;
-        #1736 //868*2 bc clk is 2x
+        #(2*651) //868*2 bc clk is 2x
         jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 0;
-        #1736
+        
+        for (int i = 0; i < 39; i++) begin
+            #(2*651*308) //62*806, *2 bc clk   2*651*868
+            jb[0] = 1;
+            #(2*651) // not sure why but needs extra wait
+            jb[0] = 1;
+            #(2*651) // not sure why but needs extra wait
+            jb[0] = 1;
+            #(2*651) // not sure why but needs extra wait
+            jb[0] = 1;
+            
+            // send the same thing 3x
+            for (int j=0; j<3; j++) begin
+            #(2*651*16) //16x baud rate is this
+            jb[0] = 0;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 0;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 0;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 0;
+            #(2*651*16)
+            jb[0] = 0;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 1;
+            end
+        end // 30 weights, 9 biases\
+        // 41 ms to run whole thing
+        
+        // weights and biases written, i checked.
         
         
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
+        // need to wait a lot here or else sw will happen when output_ready is 1
+        // bc it needs to check on next enable if done.
         
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
+        // now send the x_in
+        #(2*651*16)
+        sw[0] = 1;
+        #1000
+        sw[0] = 0;
         
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
         
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
         
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
+        for (int k = 0; k < 5; k++) begin //4 weights = x_in, 1 dummy bias
+            #(2*651*308) //62*806, *2 bc clk   2*651*868
+            jb[0] = 1;
+            #(2*651) // not sure why but needs extra wait
+            jb[0] = 1;
+            #(2*651) // not sure why but needs extra wait
+            jb[0] = 1;
+            #(2*651) // not sure why but needs extra wait
+            jb[0] = 1;
+            
+            // send the same thing 3x
+            for (int m=0; m<3; m++) begin
+            #(2*651*16) //16x baud rate is this
+            jb[0] = 0;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 0;
+            #(2*651*16)
+            jb[0] = 1;
+            #(2*651*16)
+            jb[0] = 1;
+            end
+        end
         
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
+        // check x_in written
+        // check output_final
         
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
-        jb[0] = 1;
-        #1736
-        jb[0] = 0;
-        #1736
+        
+        
+        
         #1000;
         #1000;
         $finish;

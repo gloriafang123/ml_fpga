@@ -2,15 +2,31 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module gather_weights_into_one_array(
-    input clk_100mhz,
-    input start_gathering, //btnc
-    input valid_input, // bit true if valid
-    input [7:0] x, // input to gather
+     clk_100mhz,
+     start_gathering, //btnc
+     valid_input, // bit true if valid
+    x, // input to gather
     
-    output logic [14:0]  [7:0] weights,
-    output logic [6:0] [7:0] biases ,
-    output logic output_ready
+    weights,
+    biases ,
+    output_ready
     );
+    
+    parameter NUM_WEIGHTS = 15;
+    parameter NUM_BIASES = 7;
+    
+    parameter BITS = 8;
+    
+    input clk_100mhz;
+    input start_gathering; //btnc
+    input valid_input; // bit true if valid
+    input [BITS-1:0] x; // input to gather
+    
+    output logic [NUM_WEIGHTS-1:0]  [BITS-1:0] weights;
+    output logic [NUM_BIASES-1:0] [BITS-1:0] biases ;
+    output logic output_ready;
+    
+    
     
     logic state; //1 if gathering
     // start gathering when start_gathering is true
@@ -29,20 +45,19 @@ module gather_weights_into_one_array(
             
             if (valid_input) begin
                 input_counter <= input_counter + 1;
-                if (input_counter <= 14) begin
+                if (input_counter <= (NUM_WEIGHTS - 1)) begin
                     weights[input_counter] <= x;
                 end
                 else begin
-                    biases[input_counter-15] <= x;
+                    biases[input_counter-NUM_WEIGHTS] <= x;
                 end
                 
                 // do this inside valid_input only
-                if ((input_counter + 1) == 22) begin //15+7
+                if ((input_counter + 1) == (NUM_WEIGHTS + NUM_BIASES)) begin //15+7
                     state <= 0;
                     output_ready <= 1; // pulse
                 end
             end
-            
             
         end
     end

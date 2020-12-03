@@ -54,8 +54,10 @@ module sample_data_fsm (
                                      //65000000*0.002/423
                                      // 100_000_000 * 0.0005/62 where 62 is period = 806.45
     
+    
+    
     logic [1:0] state;
-    logic [15:0] jb_16; // we're sampling at 14x baud instead of 16x
+    logic [15:0] jb_16; // we're sampling at 16x baud
     logic [29:0] z_y_x;
     logic [9:0] counter_2ms; // counts up to COUNTER_2MS
     
