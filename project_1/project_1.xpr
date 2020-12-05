@@ -88,11 +88,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/new/iris_nn.sv">
         <FileInfo RelPath="sources_1/new/iris_nn.sv">
           <Attr Name="UsedIn" Val="synthesis"/>
