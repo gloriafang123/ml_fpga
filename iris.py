@@ -77,8 +77,10 @@ for i in range(10000):
 	# print(x, y, output, loss)
 
 y_pred = np.argmax(net(x_test).detach().numpy(), axis=1)
-print(np.sum(y_pred == y_test.numpy()) / y_pred.shape[0])
+print(net(x_test).detach().numpy())
 
+print(np.sum(y_pred == y_test.numpy()) / y_pred.shape[0])
+print("max value: ", max_value)
 # Extract weights
 
 for param_tensor in net.state_dict():
