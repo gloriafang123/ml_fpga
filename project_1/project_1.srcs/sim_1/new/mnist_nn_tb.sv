@@ -33,7 +33,7 @@ module mnist_nn_tb;
         ready = 0;
         for (int i = 0; i < 784; i++) x_in[i] = 0;
         for (int i = 0; i < 8040; i++) weights[i] = 0;
-        for (int i = 0; i < 30; i++) biases[i] = 0;
+        for (int i = 0; i < 30; i++) biases[i] = 1;
         #10;
         rst = 1;
         #10;

@@ -15,11 +15,11 @@ module mnist_nn #(parameter WIDTH = 16, DECIMALS = 4) (
 localparam HIDDEN_LAYERS = 1;
 localparam NEURONS_PER_LAYER = 10;
 localparam LOG_LENGTH = 10;
-localparam OUTPUT_NEURONS = 3;
+localparam OUTPUT_NEURONS = 10;
 
 // length = # of neurons in previous layer = 1
 logic [LOG_LENGTH-1:0] lengths[HIDDEN_LAYERS+1:0];
-assign lengths = {10'b1100010000, 10'b0000001010, 10'b0000001010};
+assign lengths = {10'b0000001010, 10'b0000001010, 10'b1100010000};
 
 // layer i, neuron j, field k
 logic [NEURONS_PER_LAYER-1:0] [783:0][WIDTH-1:0] nn_weights_0;
