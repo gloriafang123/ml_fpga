@@ -58,11 +58,21 @@ module serial_2_top #(
     logic [1:0] output_type;
     logic [MAX_OUTPUTS - 1:0] output_array;
     logic array_ready;
-    logic [OUTPUT_BITS-1:0] number_of_data_out, bytes_per_data_out;
     
     parse_data_fsm #(
+
         .INPUT_BITS(OUTPUT_BITS),
-        .MAX_OUTPUTS(MAX_OUTPUTS)
+        .MAX_OUTPUTS(MAX_OUTPUTS),
+        .NUM_X(NUM_X),
+        .NUM_WEIGHTS(NUM_WEIGHTS),
+        .NUM_BIASES(NUM_BIASES),
+        .BITS_PER_WEIGHT(BITS_PER_WEIGHT),
+        .BITS_PER_BIAS(BITS_PER_BIAS),
+        .BITS_PER_X(BITS_PER_X),
+        .X_TYPE(X_TYPE),
+        .W_TYPE(W_TYPE),
+        .B_TYPE(B_TYPE)
+
     ) pdf (
         .clk_100mhz(clk_100mhz),
         .reset(reset),
@@ -70,9 +80,7 @@ module serial_2_top #(
         .input_value(cleaned_out),
         .output_type(output_type),
         .output_array(output_array),
-        .output_valid(array_ready),
-        .number_of_data_out(number_of_data_out),
-        .bytes_per_data_out(bytes_per_data_out)
+        .output_valid(array_ready)
     );
 
     // above testbenched works
@@ -105,7 +113,6 @@ module serial_2_top #(
     );
     
     // working testbench
-    logic ready_nn_update; //1 if time to update nn
     
     check_wbx_all_updated #(
         .X_TYPE(X_TYPE),
@@ -255,7 +262,16 @@ endmodule
 // outputs held constant until new inputs
 module parse_data_fsm #(
     parameter INPUT_BITS = 8, // add some combo logic to deal with the 10 bit to 8 bit check
-    parameter MAX_OUTPUTS = 100
+    parameter MAX_OUTPUTS = 100,
+    parameter NUM_X = 7,
+    parameter NUM_WEIGHTS =  7,
+    parameter NUM_BIASES =  7,
+    parameter BITS_PER_WEIGHT = 8,
+    parameter BITS_PER_BIAS = 8,
+    parameter BITS_PER_X = 8,
+    parameter X_TYPE = 2'b00,
+    parameter W_TYPE = 2'b01,
+    parameter B_TYPE = 2'b11
 )
 (
     input input_ready, //pulse
@@ -264,26 +280,36 @@ module parse_data_fsm #(
     input reset,
     output logic [1:0] output_type,
     output logic [MAX_OUTPUTS-1:0] output_array,
-    output logic output_valid,
-    output logic [INPUT_BITS-1:0] number_of_data_out, bytes_per_data_out
+    output logic output_valid
 );
     
     localparam IDLE = 0;
-    localparam METADATA_1 = 1;
-    localparam METADATA_2 = 2; 
-    localparam COLLECTING = 3;
+    localparam COLLECTING = 1;
     
-    logic [1:0] state;
-    logic [INPUT_BITS-1:0] type_data, number_of_data, bytes_per_data;
+    logic state;
+    logic [INPUT_BITS-1:0] type_data;
     
-    logic [INPUT_BITS*2-1:0] data_counter;
-    logic [INPUT_BITS*2-1:0] data_counter_max;
+    integer data_counter;
+    integer data_counter_max;
     
     logic [MAX_OUTPUTS-1:0] tmp_output_array;
     
+    
+    localparam X_DATA = BITS_PER_X*NUM_X/INPUT_BITS;
+    localparam W_DATA = BITS_PER_WEIGHT*NUM_WEIGHTS/INPUT_BITS;
+    localparam B_DATA = BITS_PER_BIAS*NUM_BIASES/INPUT_BITS;
+    
     // packet count basically
     // each has length input_bits
-    assign data_counter_max = number_of_data*bytes_per_data;
+    always_comb begin
+        case (type_data[1:0])
+            X_TYPE: begin data_counter_max = X_DATA; end
+            W_TYPE: begin data_counter_max = W_DATA; end
+            B_TYPE: begin data_counter_max = B_DATA; end
+            default: begin data_counter_max = 100; end //put some random number here
+        endcase
+    end
+    
     // probably want to add outputs for data_counter and byte_counter too
 
     always_ff @(posedge clk_100mhz) begin
@@ -299,26 +325,11 @@ module parse_data_fsm #(
             case (state)
                 IDLE: begin 
                     if(input_ready) begin 
-                        state <= METADATA_1; 
                         type_data <= input_value; //get data type (weight, in act)
                         tmp_output_array <= 0;
-                    end 
-                end
-                
-                METADATA_1:begin
-                    if (input_ready) begin
-                        number_of_data <= input_value;
-                        state <= METADATA_2;    // get the number of data
-                    end
-                end
-                
-                METADATA_2: begin
-                    if (input_ready) begin
-                        bytes_per_data <= input_value;
-                        state <= COLLECTING;      // get the number of bytes per data
-                        
+                        state <= COLLECTING;
                         data_counter <= 1;
-                    end
+                    end 
                 end
                 
                 COLLECTING: begin
@@ -333,8 +344,6 @@ module parse_data_fsm #(
                             output_array <= tmp_output_array;
                             output_array[(data_counter-1)*INPUT_BITS +:INPUT_BITS] <= input_value;
                             
-                            number_of_data_out <= number_of_data;
-                            bytes_per_data_out <= bytes_per_data;
                             output_type <= type_data[1:0];
                             
                             state <= IDLE;

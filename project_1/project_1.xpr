@@ -247,6 +247,12 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sim_1/imports/xil_defaultlib/neural_network_tb.sdb">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PSIMDIR/sim_1/behav/xsim/xsim.dir/xil_defaultlib/neural_network_tb.sdb"/>
+          <Attr Name="ImportTime" Val="1607224119"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="mnist_nn_tb"/>

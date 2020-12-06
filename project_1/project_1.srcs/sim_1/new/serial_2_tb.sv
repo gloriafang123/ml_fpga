@@ -59,8 +59,6 @@ module serial_2_top_tb;
     logic [OUTPUT_BITS-1+2:0] metadata_x = 10'b1_0000_0000_0; //x type 00
     logic [OUTPUT_BITS-1+2:0] metadata_w = 10'b1_0000_0001_0; //w type 01
     logic [OUTPUT_BITS-1+2:0] metadata_b = 10'b1_0000_0011_0; //b type 11
-    logic [OUTPUT_BITS-1+2:0] metadata_3 = 10'b1_0000_0011_0; //3 data
-    logic [OUTPUT_BITS-1+2:0] metadata_2 = 10'b1_0000_0010_0; //2 bytes each
     
     logic [OUTPUT_BITS-1+2:0] data_1 = 10'b1_0000_0001_0; //2 bytes each
     logic [OUTPUT_BITS-1+2:0] data_2 = 10'b1_0000_0010_0; //2 bytes each
@@ -95,19 +93,6 @@ module serial_2_top_tb;
         // can make this even longer
         //    #(100*CLK_PERIOD)
         
-        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
-        for (i = 0; i < OUTPUT_BITS+2; i++) begin
-            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
-            jb_data = metadata_3[i]; //3
-        end
-        
-        //send 2
-        jb_data = 1;
-        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
-        for (i = 0; i < OUTPUT_BITS+2; i++) begin
-            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
-            jb_data = metadata_2[i]; //3
-        end
         
         
         //send rest 6
@@ -174,24 +159,6 @@ module serial_2_top_tb;
         
         // check that the sample_single_byte_fsm has expected values
         
-        jb_data = 1;
-        // can make this even longer
-        //    #(100*CLK_PERIOD)
-        
-        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
-        for (i = 0; i < OUTPUT_BITS+2; i++) begin
-            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
-            jb_data = metadata_3[i]; //3
-        end
-        
-        //send 2
-        jb_data = 1;
-        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
-        for (i = 0; i < OUTPUT_BITS+2; i++) begin
-            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
-            jb_data = metadata_2[i]; //3
-        end
-        
         
         //send rest 6
         jb_data = 1;
@@ -246,26 +213,7 @@ module serial_2_top_tb;
         end
         
         // check that the sample_single_byte_fsm has expected values
-        
-        jb_data = 1;
-        // can make this even longer
-        //    #(100*CLK_PERIOD)
-        
-        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
-        for (i = 0; i < OUTPUT_BITS+2; i++) begin
-            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
-            jb_data = metadata_3[i]; //3
-        end
-        
-        //send 2
-        jb_data = 1;
-        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
-        for (i = 0; i < OUTPUT_BITS+2; i++) begin
-            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
-            jb_data = metadata_2[i]; //3
-        end
-        
-        
+ 
         //send rest 6
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
@@ -461,15 +409,31 @@ module parse_data_fsm_tb;
     parameter X_TYPE = 2'b00;
     parameter W_TYPE = 2'b01;
     parameter B_TYPE = 2'b11;
+
+    parameter NUM_X = 5;
+    parameter NUM_WEIGHTS = 15;
+    parameter NUM_BIASES = 3;
+    parameter BITS_PER_WEIGHT = 1*INPUT_BITS; //takes larger of input_bits and this one
+    parameter BITS_PER_BIAS = 5*INPUT_BITS;
+    parameter BITS_PER_X = 3*INPUT_BITS;
+
     parameter MAX_OUTPUTS = 200;
     
     logic [INPUT_BITS-1:0] input_value;
     logic [MAX_OUTPUTS-1:0] output_array;
-    logic [INPUT_BITS-1:0] number_of_data_out, bytes_per_data_out;
     
     parse_data_fsm #(
         .INPUT_BITS(INPUT_BITS),
-        .MAX_OUTPUTS(MAX_OUTPUTS)
+        .MAX_OUTPUTS(MAX_OUTPUTS),
+        .NUM_X(NUM_X),
+        .NUM_WEIGHTS(NUM_WEIGHTS),
+        .NUM_BIASES(NUM_BIASES),
+        .BITS_PER_WEIGHT(BITS_PER_WEIGHT),
+        .BITS_PER_BIAS(BITS_PER_BIAS),
+        .BITS_PER_X(BITS_PER_X),
+        .X_TYPE(X_TYPE),
+        .W_TYPE(W_TYPE),
+        .B_TYPE(B_TYPE)
     ) uut_fsm
     (
         .input_ready(input_ready),
@@ -478,10 +442,9 @@ module parse_data_fsm_tb;
         .reset(reset),
         .output_type(output_type),
         .output_array(output_array),
-        .output_valid(output_valid),
-        .number_of_data_out(number_of_data_out),
-        .bytes_per_data_out(bytes_per_data_out)
+        .output_valid(output_valid)
     );
+
     
     parameter CLK_PERIOD = 10;
     parameter INPUT_PERIOD = 5*CLK_PERIOD;
@@ -501,9 +464,9 @@ module parse_data_fsm_tb;
         input_ready = 0;
         #(INPUT_PERIOD-CLK_PERIOD)
         input_ready = 1;
-        input_value = 1; //type_data, number_of_data, bytes_per_data;
+        input_value = W_TYPE; //type_data, number_of_data, bytes_per_data;
                         // type data: weights   
-        #(CLK_PERIOD)
+/*        #(CLK_PERIOD)
         input_ready = 0;
         #(INPUT_PERIOD-CLK_PERIOD)
         input_ready = 1;
@@ -514,7 +477,8 @@ module parse_data_fsm_tb;
         #(INPUT_PERIOD-CLK_PERIOD)
         input_ready = 1;
         input_value = 3; //bytes_per_data
-        
+*/
+
         // now need 15 times
         #(CLK_PERIOD)
         input_ready = 0;
@@ -604,19 +568,8 @@ module parse_data_fsm_tb;
         input_ready = 0;
         #(INPUT_PERIOD-CLK_PERIOD)
         input_ready = 1;
-        input_value = 1; //type_data, number_of_data, bytes_per_data;
+        input_value = X_TYPE; //type_data, number_of_data, bytes_per_data;
                         // type data: weights   
-        #(CLK_PERIOD)
-        input_ready = 0;
-        #(INPUT_PERIOD-CLK_PERIOD)
-        input_ready = 1;
-        input_value = 5; //number_of_data
-        
-        #(CLK_PERIOD)
-        input_ready = 0;
-        #(INPUT_PERIOD-CLK_PERIOD)
-        input_ready = 1;
-        input_value = 1; //bytes_per_data
         
         // now need 5 times
         #(CLK_PERIOD)
