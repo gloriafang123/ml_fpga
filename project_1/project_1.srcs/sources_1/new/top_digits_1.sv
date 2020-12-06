@@ -14,19 +14,19 @@ module top_digits_1 (
     output logic [15:0] led
 );
 
-    parameter ENABLE_PERIOD = 651;
+    parameter ENABLE_PERIOD = 651; //fixed
     parameter OUTPUT_BITS = 8; //1 byte at a time
-    parameter COUNTER_2MS = 308;
+    parameter COUNTER_2MS = 308; //fixed
     parameter SAMPLE_RATE = 16; //fixed
-    parameter NUM_WEIGHTS = 30;
-    parameter NUM_BIASES = 9;
-    parameter NUM_X = 4;
+    parameter NUM_WEIGHTS = 8040;
+    parameter NUM_BIASES = 30;
+    parameter NUM_X = 784;
 
-    parameter BITS_PER_BIAS = 8;
-    parameter BITS_PER_X = 8;
-    parameter X_TYPE = 2'b00;
-    parameter W_TYPE = 2'b01;
-    parameter B_TYPE = 2'b11;
+    parameter BITS_PER_BIAS = 16;
+    parameter BITS_PER_X = 16;
+    parameter X_TYPE = 2'b00; //fixed
+    parameter W_TYPE = 2'b01; //fixed
+    parameter B_TYPE = 2'b11; //fixed
 
 //iris: width 8, decimals 3,
 //num_x 4,
@@ -41,12 +41,12 @@ module top_digits_1 (
 //num_output = 10,
 //bits per output = 16
 
-    parameter BITS_PER_WEIGHT = 8;
-    parameter DECIMAL_BITS = 3;
-    parameter NUM_OUTPUTS = 3;
-    parameter BITS_PER_OUTPUT = 8;
+    parameter BITS_PER_WEIGHT = 16;
+    parameter DECIMAL_BITS = 5;
+    parameter NUM_OUTPUTS = 10;
+    parameter BITS_PER_OUTPUT = 16;
     
-    parameter MAX_OUTPUTS = NUM_WEIGHTS*BITS_PER_WEIGHT + 8;
+    parameter MAX_OUTPUTS = NUM_WEIGHTS*BITS_PER_WEIGHT + 8; //fixed
 
 
     logic [NUM_WEIGHTS-1:0][BITS_PER_WEIGHT-1:0] weights;
@@ -91,7 +91,7 @@ module top_digits_1 (
 //num_biases 9,
 //num_output 3
 
-    iris_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) iris_nn_instance (
+    mnist_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) mnist_nn_instance (
         .clk(clk_100mhz),
         .rst(reset),
         .ready(ready_nn_update),
