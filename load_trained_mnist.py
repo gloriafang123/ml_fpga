@@ -3,9 +3,11 @@ from tensorflow.keras.layers import Dense
 import numpy as np
 import mnist
 
+ds_size = 10
+
 # Build the model.
 model = Sequential([
-  Dense(10, activation='relu', input_shape=(784,)),
+  Dense(7, activation='relu', input_shape=(ds_size*ds_size,)),
   Dense(10, activation='relu'),
   Dense(10, activation='softmax'),
 ])
@@ -45,6 +47,7 @@ biases_flat = flatten(biases)
 
 # pickle everything
 import pickle
-pickle.dump((weights_flat, biases_flat), open("mnist_weights.pkl", "wb"))
+pickle.dump((weights_flat, biases_flat), open("mnist_weights_small.pkl", "wb"))
 
-w, b = pickle.load(open('mnist_weights.pkl', 'rb'))
+import pickle
+w, b = pickle.load(open('mnist_weights_small.pkl', 'rb'))
