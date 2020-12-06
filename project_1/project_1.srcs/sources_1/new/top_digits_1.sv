@@ -73,7 +73,13 @@ module top_digits_1 (
     logic [NUM_OUTPUTS-1:0][BITS_PER_OUTPUT-1:0] output_final;
     logic nn_done;
 
-    mnist_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) (
+//iris: width 8, decimals 3,
+//num_x 4,
+//num_weights 30,
+//num_biases 9,
+//num_output 3
+
+    mnist_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) mnist_nn_instance (
         .clk(clk_100mhz),
         .rst(reset),
         .ready(ready_nn_update),
