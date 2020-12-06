@@ -87,7 +87,7 @@ endgenerate
 generate
     for (i=0; i<10; i=i+1) begin
             neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS), 
-                           .NEURONS_PER_LAYER(7), 
+                           .NEURONS_PER_LAYER(10), 
                            .LOG_LENGTH(LOG_LENGTH)) fc_hidden (
             .clk(clk), .rst(rst), 
             .ready(
