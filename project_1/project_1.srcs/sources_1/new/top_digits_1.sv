@@ -18,21 +18,33 @@ module top_digits_1 (
     parameter OUTPUT_BITS = 8; //1 byte at a time
     parameter COUNTER_2MS = 308;
     parameter SAMPLE_RATE = 16; //fixed
-    parameter NUM_WEIGHTS = 8040;
-    parameter NUM_BIASES = 30;
-    parameter NUM_X = 784;
+    parameter NUM_WEIGHTS = 30;
+    parameter NUM_BIASES = 9;
+    parameter NUM_X = 4;
 
-    parameter BITS_PER_BIAS = 16;
-    parameter BITS_PER_X = 16;
+    parameter BITS_PER_BIAS = 8;
+    parameter BITS_PER_X = 8;
     parameter X_TYPE = 2'b00;
     parameter W_TYPE = 2'b01;
     parameter B_TYPE = 2'b11;
 
+//iris: width 8, decimals 3,
+//num_x 4,
+//num_weights 30,
+//num_biases 9,
+//num_output 3
 
-    parameter BITS_PER_WEIGHT = 16;
-    parameter DECIMAL_BITS = 5;
-    parameter NUM_OUTPUTS = 10;
-    parameter BITS_PER_OUTPUT = 16;
+//mnist: width = 16, decimals = 5
+//num_x = 784, 
+//num_weights = 8040,
+//num_biases = 30,
+//num_output = 10,
+//bits per output = 16
+
+    parameter BITS_PER_WEIGHT = 8;
+    parameter DECIMAL_BITS = 3;
+    parameter NUM_OUTPUTS = 3;
+    parameter BITS_PER_OUTPUT = 8;
     
     parameter MAX_OUTPUTS = NUM_WEIGHTS*BITS_PER_WEIGHT + 8;
 
@@ -79,7 +91,7 @@ module top_digits_1 (
 //num_biases 9,
 //num_output 3
 
-    mnist_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) mnist_nn_instance (
+    iris_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) iris_nn_instance (
         .clk(clk_100mhz),
         .rst(reset),
         .ready(ready_nn_update),
