@@ -25,12 +25,12 @@ module serial_3_top_tb;
     logic [NUM_BIASES-1:0][BITS_PER_BIAS-1:0] biases;
     logic [NUM_X-1:0][BITS_PER_X-1:0] x;
     
-    serial_2_top #(
+    serial_3_top #(
         .PERIOD(PERIOD), 
         .OUTPUT_BITS(OUTPUT_BITS), 
         .COUNTER_2MS(COUNTER_2MS),
         .SAMPLE_RATE(SAMPLE_RATE),
-        .MAX_OUTPUTS(MAX_OUTPUTS),
+//        .MAX_OUTPUTS(MAX_OUTPUTS),
         .NUM_WEIGHTS(NUM_WEIGHTS),
         .NUM_BIASES(NUM_BIASES),
         .NUM_X(NUM_X),

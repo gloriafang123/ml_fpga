@@ -18,9 +18,9 @@ module top_digits_1 (
     parameter OUTPUT_BITS = 8; //1 byte at a time
     parameter COUNTER_2MS = 308; //fixed
     parameter SAMPLE_RATE = 16; //fixed
-    parameter NUM_WEIGHTS = 8040;
-    parameter NUM_BIASES = 30;
-    parameter NUM_X = 784;
+    parameter NUM_WEIGHTS = 870;
+    parameter NUM_BIASES = 27;
+    parameter NUM_X = 100;
 
     parameter BITS_PER_BIAS = 16;
     parameter BITS_PER_X = 16;
@@ -53,7 +53,7 @@ module top_digits_1 (
 
 
     parameter BITS_PER_WEIGHT = 16;
-    parameter DECIMAL_BITS = 5;
+    parameter DECIMAL_BITS = 4;
     parameter NUM_OUTPUTS = 10;
     parameter BITS_PER_OUTPUT = 16;
     
@@ -74,7 +74,7 @@ module top_digits_1 (
         .OUTPUT_BITS(OUTPUT_BITS),
         .COUNTER_2MS(COUNTER_2MS),
         .SAMPLE_RATE(SAMPLE_RATE),
-//        .MAX_OUTPUTS(MAX_OUTPUTS),
+//        .MAX_OUTPUTS(MAX_OUTPUTS), // comment if using serial_3_top
         .NUM_WEIGHTS(NUM_WEIGHTS),
         .NUM_BIASES(NUM_BIASES),
         .NUM_X(NUM_X),
@@ -97,7 +97,7 @@ module top_digits_1 (
     logic [NUM_OUTPUTS-1:0][BITS_PER_OUTPUT-1:0] output_final;
     logic nn_done;
 
-    mnist_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) mnist_nn_instance (
+/*    mnist_nn_small #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) mnist_nn_instance (
         .clk(clk_100mhz),
         .rst(reset),
         .ready(ready_nn_update),
@@ -106,7 +106,7 @@ module top_digits_1 (
         .biases(biases),
         .output_final(output_final),
         .done(nn_done)
-    );
+    );*/
 
     // show that nn is done
     assign led[15] = nn_done;

@@ -59,7 +59,7 @@ module serial_3_top #(
     logic [BITS_PER_WEIGHT - 1:0] output_array;
     logic array_ready, end_of_wbx;
     
-    logic [BITS_PER_WEIGHT-1:0] output_index;
+    integer output_index;
     
     parse_data_fsm_byte_outputs #(
         .INPUT_BITS(OUTPUT_BITS),
@@ -77,7 +77,7 @@ module serial_3_top #(
     (
         .input_ready(byte_ready),
         .input_value(cleaned_out),
-        .clk_100mhz(clk),
+        .clk_100mhz(clk_100mhz),
         .reset(reset),
         .output_type(output_type),
         .output_array(output_array),
@@ -417,7 +417,7 @@ module parse_data_fsm_byte_outputs #(
     output logic [1:0] output_type,
     output logic [OUTPUT_BITS-1:0] output_array,
     output logic output_valid,
-    output logic [OUTPUT_BITS-1:0] output_index,  
+    output integer output_index,  
     output logic end_of_wbx     // pulse 1 if end of an array. may not be needed
 );
 
