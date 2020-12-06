@@ -396,6 +396,202 @@ module sample_single_byte_fsm_tb;
     end
 endmodule
 
+module parse_data_fsm_byte_outputs_tb;
+
+    logic clk;
+    logic reset;
+    logic input_ready;
+    logic [1:0] output_type;
+    logic output_valid;
+    
+    // works with input_bits = 6 for example too
+    parameter INPUT_BITS = 8; // add some combo logic to deal with the 10 bit to 8 bit check
+    parameter X_TYPE = 2'b00;
+    parameter W_TYPE = 2'b01;
+    parameter B_TYPE = 2'b11;
+    parameter OUTPUT_BITS = 16;
+
+    parameter NUM_X = 3;
+    parameter NUM_WEIGHTS = 6;
+    parameter NUM_BIASES = 3;
+    parameter BITS_PER_WEIGHT = 1*INPUT_BITS; //takes larger of input_bits and this one
+    parameter BITS_PER_BIAS = 5*INPUT_BITS;
+    parameter BITS_PER_X = 3*INPUT_BITS;
+    
+    logic [INPUT_BITS-1:0] input_value;
+    logic [OUTPUT_BITS-1:0] output_array;
+    logic [OUTPUT_BITS-1:0] output_index;
+    logic end_of_wbx;
+    
+    parse_data_fsm_byte_outputs #(
+        .INPUT_BITS(INPUT_BITS),
+        .OUTPUT_BITS(OUTPUT_BITS),
+        .NUM_X(NUM_X),
+        .NUM_WEIGHTS(NUM_WEIGHTS),
+        .NUM_BIASES(NUM_BIASES),
+        .BITS_PER_WEIGHT(BITS_PER_WEIGHT),
+        .BITS_PER_BIAS(BITS_PER_BIAS),
+        .BITS_PER_X(BITS_PER_X),
+        .X_TYPE(X_TYPE),
+        .W_TYPE(W_TYPE),
+        .B_TYPE(B_TYPE)
+    ) uut_fsm
+    (
+        .input_ready(input_ready),
+        .input_value(input_value),
+        .clk_100mhz(clk),
+        .reset(reset),
+        .output_type(output_type),
+        .output_array(output_array),
+        .output_valid(output_valid),
+        .output_index(output_index),
+        .end_of_wbx(end_of_wbx)
+    );
+
+    
+    parameter CLK_PERIOD = 10;
+    parameter INPUT_PERIOD = 5*CLK_PERIOD;
+    always begin
+        #(CLK_PERIOD/2);  //every 5 ns switch...so period of clock is 10 ns...100 MHz clock
+        clk = !clk;
+    end
+
+    //initial block...this is our test simulation
+    initial begin
+        clk = 0;
+        reset = 1;
+        #CLK_PERIOD
+        reset = 0;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = W_TYPE; //type_data, number_of_data, bytes_per_data;
+
+
+        // now need 15 times
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 1;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 1;
+        
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 2;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 2;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 3;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 3;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 4;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 4;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 5;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 5;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 10;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 10;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+       
+ 
+        ////////
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = X_TYPE; //type_data, number_of_data, bytes_per_data;
+                        // type data: weights   
+        
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 5;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 5;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 4;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 33;
+        
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 4;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        #(INPUT_PERIOD-CLK_PERIOD)
+        input_ready = 1;
+        input_value = 5;
+        #(CLK_PERIOD)
+        input_ready = 0;
+        
+        $finish;
+    end
+endmodule
+
 module parse_data_fsm_tb;
 
     logic clk;

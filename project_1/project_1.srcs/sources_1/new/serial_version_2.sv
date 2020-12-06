@@ -280,11 +280,100 @@ module parse_data_fsm_byte_outputs #(
     output logic [1:0] output_type,
     output logic [OUTPUT_BITS-1:0] output_array,
     output logic output_valid,
-    output logic output_index,  
+    output logic [OUTPUT_BITS-1:0] output_index,  
     output logic end_of_wbx     // pulse 1 if end of an array. may not be needed
 );
 
-    // type to hold type, defaults 
+    // type to hold type, defaults  00 and index 0
+    // when valid input, increment index or change type depending on fsm
+    // states: depend on the type.
+    // idle state: wait for type, then get the type - change state; then in state - do counter until done
+    
+    localparam IDLE = 2'b10;
+    localparam X = 2'b00;
+    localparam W = 2'b01;
+    localparam B = 2'b11;
+    
+    logic [1:0] state;
+    logic [1:0] cycle_counter; // just goes to 2 for now
+    integer data_counter, data_counter_max;
+    
+    logic [OUTPUT_BITS-1:0] tmp_output_array;
+    
+    // gather every output_bits/input_bits into a single array
+    localparam CYCLES_MAX = OUTPUT_BITS/INPUT_BITS;
+    
+    always_comb begin
+        case (state)
+            IDLE: begin data_counter_max = 100; end // just put some dummy value
+            X_TYPE: begin data_counter_max = NUM_X; end
+            W_TYPE: begin data_counter_max = NUM_WEIGHTS; end
+            B_TYPE: begin data_counter_max = NUM_BIASES; end
+        endcase
+    end
+    
+    always_ff @(posedge clk_100mhz) begin
+        if (reset) begin
+            output_valid <= 0;
+            end_of_wbx <= 0;
+            output_array <= 0;
+            output_index <= 0;
+            state <= IDLE;
+            cycle_counter <= 0;
+            data_counter <= 0;
+        end
+        else begin
+            output_valid <= 0;
+            end_of_wbx <= 0;
+            // if input valid, do update stuff
+            if (input_ready) begin
+                case (state)
+                    IDLE: begin
+                        // this means it just received the type.
+                        state <= input_value[1:0]; //get data type (weight, in act)
+                        data_counter <= 1;
+                        cycle_counter <= 1;
+                        tmp_output_array <= 0;
+                        
+                    end
+                    W,B,X: begin //W,B,X states
+                        cycle_counter <= cycle_counter + 1;
+                        
+                        // update tmp_output with input value
+                        tmp_output_array[(cycle_counter - 1)*INPUT_BITS +: INPUT_BITS] <= input_value;
+                        
+                        // this just filled the output array
+                        if (cycle_counter == CYCLES_MAX) begin
+                            cycle_counter <= 1;
+                            data_counter <= data_counter + 1; 
+                            
+                            // update all outputs
+                            output_array <= tmp_output_array;
+                            output_array[(cycle_counter - 1)*INPUT_BITS +: INPUT_BITS] <= input_value;
+                            output_valid <= 1;
+                            output_index <= data_counter - 1;
+                            output_type <= state;
+                            
+                            // if this was the last data counter update, then done
+                            if (data_counter == data_counter_max) begin
+                                state <= IDLE;
+                                end_of_wbx <= 1;
+                                cycle_counter <= 0;
+                                data_counter <= 0;
+                            end
+                        end
+                        
+                    end
+                    
+                    default: begin
+                        state <= IDLE;
+                    end
+                endcase
+            end
+        end
+        
+    end
+    
 endmodule
 
 // based on input including metadata, gets array of outputs
