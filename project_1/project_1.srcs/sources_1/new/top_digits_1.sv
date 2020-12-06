@@ -18,9 +18,9 @@ module top_digits_1 (
     parameter OUTPUT_BITS = 8; //1 byte at a time
     parameter COUNTER_2MS = 308;
     parameter SAMPLE_RATE = 16; //fixed
-    parameter NUM_WEIGHTS = 7;
-    parameter NUM_BIASES = 7;
-    parameter NUM_X = 7;
+    parameter NUM_WEIGHTS = 100;
+    parameter NUM_BIASES = 10;
+    parameter NUM_X = 8;
     parameter BITS_PER_WEIGHT = 16;
     parameter BITS_PER_BIAS = 16;
     parameter BITS_PER_X = 16;
@@ -74,7 +74,7 @@ module top_digits_1 (
         case (xwb_type)
             X_TYPE: begin
                 display_data = {
-                    x[7][3:0],
+                    x[NUM_X-1][3:0],
                     x[6][3:0],
                     x[5][3:0],
                     x[4][3:0],
@@ -87,7 +87,7 @@ module top_digits_1 (
 
             W_TYPE: begin
                 display_data = {
-                    weights[7][3:0],
+                    weights[NUM_WEIGHTS-1][3:0],
                     weights[6][3:0],
                     weights[5][3:0],
                     weights[4][3:0],
@@ -100,7 +100,7 @@ module top_digits_1 (
 
             B_TYPE: begin
                 display_data = {
-                    biases[7][3:0],
+                    biases[NUM_BIASES-1][3:0],
                     biases[6][3:0],
                     biases[5][3:0],
                     biases[4][3:0],
