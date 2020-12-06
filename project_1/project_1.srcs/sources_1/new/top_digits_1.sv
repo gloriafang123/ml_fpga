@@ -97,7 +97,7 @@ module top_digits_1 (
     logic [NUM_OUTPUTS-1:0][BITS_PER_OUTPUT-1:0] output_final;
     logic nn_done;
 
-/*    mnist_nn_small #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) mnist_nn_instance (
+    mnist_nn_small #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) mnist_nn_instance (
         .clk(clk_100mhz),
         .rst(reset),
         .ready(ready_nn_update),
@@ -106,7 +106,7 @@ module top_digits_1 (
         .biases(biases),
         .output_final(output_final),
         .done(nn_done)
-    );*/
+    );
 
     // show that nn is done
     assign led[15] = nn_done;
