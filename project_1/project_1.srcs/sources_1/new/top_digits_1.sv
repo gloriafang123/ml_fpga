@@ -24,9 +24,11 @@ module top_digits_1 (
 
     parameter BITS_PER_BIAS = 16;
     parameter BITS_PER_X = 16;
+
     parameter X_TYPE = 2'b00; //fixed
     parameter W_TYPE = 2'b01; //fixed
     parameter B_TYPE = 2'b11; //fixed
+
 
 //iris: width 8, decimals 3,
 //num_x 4,
