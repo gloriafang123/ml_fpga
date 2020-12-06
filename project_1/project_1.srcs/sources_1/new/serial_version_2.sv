@@ -81,7 +81,7 @@ module serial_2_top #(
         .output_type(output_type),
         .output_array(output_array),
         .output_valid(array_ready)
-    );
+    ); // redesign this, so that it outputs single byte, index, type, and 1 when valid
 
     // above testbenched works
     logic wbx_update;
@@ -256,6 +256,35 @@ module sample_single_byte_fsm #(
         end
     end
 
+endmodule
+
+// todo: in progress
+module parse_data_fsm_byte_outputs #(
+    parameter INPUT_BITS = 8, // add some combo logic to deal with the 10 bit to 8 bit check
+    parameter OUTPUT_BITS = 16, //max of bits per weight, bias, x
+    parameter NUM_X = 7,
+    parameter NUM_WEIGHTS =  7,
+    parameter NUM_BIASES =  7,
+    parameter BITS_PER_WEIGHT = 8,
+    parameter BITS_PER_BIAS = 8,
+    parameter BITS_PER_X = 8,
+    parameter X_TYPE = 2'b00,
+    parameter W_TYPE = 2'b01,
+    parameter B_TYPE = 2'b11
+)
+(
+    input input_ready, //pulse
+    input [INPUT_BITS-1:0] input_value,
+    input clk_100mhz,
+    input reset,
+    output logic [1:0] output_type,
+    output logic [OUTPUT_BITS-1:0] output_array,
+    output logic output_valid,
+    output logic output_index,  
+    output logic end_of_wbx     // pulse 1 if end of an array. may not be needed
+);
+
+    // type to hold type, defaults 
 endmodule
 
 // based on input including metadata, gets array of outputs
