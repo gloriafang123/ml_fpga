@@ -85,7 +85,7 @@ module top_digits_1 (
     );
 
     // show that nn is done
-    assign sw[15] = nn_done;
+    assign led[15] = nn_done;
     parameter SHOW_OUTPUT = 2'b10;
 
     // use switches to show display for what values have been received
