@@ -18,15 +18,21 @@ module top_digits_1 (
     parameter OUTPUT_BITS = 8; //1 byte at a time
     parameter COUNTER_2MS = 308;
     parameter SAMPLE_RATE = 16; //fixed
-    parameter NUM_WEIGHTS = 100;
-    parameter NUM_BIASES = 10;
-    parameter NUM_X = 8;
-    parameter BITS_PER_WEIGHT = 16;
+    parameter NUM_WEIGHTS = 8040;
+    parameter NUM_BIASES = 30;
+    parameter NUM_X = 784;
+
     parameter BITS_PER_BIAS = 16;
     parameter BITS_PER_X = 16;
     parameter X_TYPE = 2'b00;
     parameter W_TYPE = 2'b01;
     parameter B_TYPE = 2'b11;
+
+
+    parameter BITS_PER_WEIGHT = 16;
+    parameter DECIMAL_BITS = 5;
+    parameter NUM_OUTPUTS = 10;
+    parameter BITS_PER_OUTPUT = 16;
     
     parameter MAX_OUTPUTS = NUM_WEIGHTS*BITS_PER_WEIGHT + 8;
 
@@ -64,6 +70,24 @@ module top_digits_1 (
         .ready_nn_update(ready_nn_update)
     );
 
+    logic [NUM_OUTPUTS-1:0][BITS_PER_OUTPUT-1:0] output_final;
+    logic nn_done;
+
+    mnist_nn #(.WIDTH(BITS_PER_WEIGHT), .DECIMALS(DECIMAL_BITS)) (
+        .clk(clk_100mhz),
+        .rst(reset),
+        .ready(ready_nn_update),
+        .x_in(x),
+        .weights(weights),
+        .biases(biases),
+        .output_final(output_final),
+        .done(nn_done)
+    );
+
+    // show that nn is done
+    assign sw[15] = nn_done;
+    parameter SHOW_OUTPUT = 2'b10;
+
     // use switches to show display for what values have been received
     logic [1:0] xwb_type; //x, w, or b
     assign xwb_type = sw[1:0]; // use switches to control
@@ -72,7 +96,7 @@ module top_digits_1 (
 
     always_comb begin
         case (xwb_type)
-            X_TYPE: begin
+            X_TYPE: begin //00
                 display_data = {
                     x[NUM_X-1][3:0],
                     x[6][3:0],
@@ -85,7 +109,7 @@ module top_digits_1 (
                 };
             end
 
-            W_TYPE: begin
+            W_TYPE: begin //01
                 display_data = {
                     weights[NUM_WEIGHTS-1][3:0],
                     weights[6][3:0],
@@ -98,7 +122,7 @@ module top_digits_1 (
                 };
             end
 
-            B_TYPE: begin
+            B_TYPE: begin //11
                 display_data = {
                     biases[NUM_BIASES-1][3:0],
                     biases[6][3:0],
@@ -108,6 +132,19 @@ module top_digits_1 (
                     biases[2][3:0],
                     biases[1][3:0],
                     biases[0][3:0]
+                };
+            end
+
+            SHOW_OUTPUT: begin // 10
+                display_data = {
+                    output_final[NUM_OUTPUTS-1][3:0],
+                    output_final[6][3:0],
+                    output_final[5][3:0],
+                    output_final[4][3:0],
+                    output_final[3][3:0],
+                    output_final[2][3:0],
+                    output_final[1][3:0],
+                    output_final[0][3:0]
                 };
             end
         endcase
@@ -127,6 +164,8 @@ module top_digits_1 (
             led[0] <= ~led[0]; //change status if new update
         end
     end
+
+
 endmodule
 
 
@@ -204,5 +243,6 @@ module display_8hex(
 
        endcase
       end
+
 
 endmodule
