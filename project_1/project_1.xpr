@@ -31,7 +31,7 @@
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
     <Option Name="DSABoardId" Val="nexys4_ddr"/>
-    <Option Name="WTXSimLaunchSim" Val="132"/>
+    <Option Name="WTXSimLaunchSim" Val="147"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -139,7 +139,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/new/iris_nn_tb.sv">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PSRCDIR/sim_1/new/iris_nn_tb.sv"/>
           <Attr Name="ImportTime" Val="1606242022"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -239,6 +238,12 @@
       </File>
       <File Path="$PPRDIR/iris_nn_tb_behav.wcfg">
         <FileInfo>
+          <Attr Name="UserDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/mnist_nn_tb_behav.wcfg">
+        <FileInfo>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
@@ -252,6 +257,7 @@
         <Option Name="SrcSet" Val="sources_1"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/neural_network_tb_behav.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/iris_nn_tb_behav.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/mnist_nn_tb_behav.wcfg"/>
         <Option Name="NLNetlistMode" Val="funcsim"/>
       </Config>
     </FileSet>
