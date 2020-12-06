@@ -1,5 +1,469 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
+module serial_3_top_tb;
+    parameter PERIOD = 3; //sample clock
+    parameter OUTPUT_BITS = 8;
+    parameter COUNTER_2MS = 20; //enables till 2ms
+    parameter SAMPLE_RATE = 16;
+    parameter MAX_OUTPUTS = 200; //output_bits * largest of w,b,x count
+    
+    parameter NUM_WEIGHTS = 6;
+    parameter NUM_BIASES = 6;
+    parameter NUM_X = 6;
+    parameter BITS_PER_WEIGHT = 16;
+    parameter BITS_PER_BIAS = 16;
+    parameter BITS_PER_X = 16;
+    
+    parameter X_TYPE = 2'b00;
+    parameter W_TYPE = 2'b01;
+    parameter B_TYPE = 2'b11;
+    
+    
+    parameter CLK_PERIOD = 10;
+    logic clk, reset, jb_data, ready_nn_update;
+    logic [NUM_WEIGHTS-1:0][BITS_PER_WEIGHT-1:0] weights;
+    logic [NUM_BIASES-1:0][BITS_PER_BIAS-1:0] biases;
+    logic [NUM_X-1:0][BITS_PER_X-1:0] x;
+    
+    serial_2_top #(
+        .PERIOD(PERIOD), 
+        .OUTPUT_BITS(OUTPUT_BITS), 
+        .COUNTER_2MS(COUNTER_2MS),
+        .SAMPLE_RATE(SAMPLE_RATE),
+        .MAX_OUTPUTS(MAX_OUTPUTS),
+        .NUM_WEIGHTS(NUM_WEIGHTS),
+        .NUM_BIASES(NUM_BIASES),
+        .NUM_X(NUM_X),
+        .BITS_PER_WEIGHT(BITS_PER_WEIGHT),
+        .BITS_PER_BIAS(BITS_PER_BIAS),
+        .BITS_PER_X(BITS_PER_X),
+        .X_TYPE(X_TYPE),
+        .W_TYPE(W_TYPE),
+        .B_TYPE(B_TYPE)
+    )
+    uut (
+        .clk_100mhz(clk),
+        .reset(reset),
+        .jb_data(jb_data),
+        .weights(weights),
+        .biases(biases),
+        .x(x),
+        .ready_nn_update(ready_nn_update)
+    );
+    
+    always begin
+        #(CLK_PERIOD/2);  //every 5 ns switch...so period of clock is 10 ns...100 MHz clock
+        clk = !clk;
+    end
+
+    logic [OUTPUT_BITS-1+2:0] metadata_x = 10'b1_0000_0000_0; //x type 00
+    logic [OUTPUT_BITS-1+2:0] metadata_w = 10'b1_0000_0001_0; //w type 01
+    logic [OUTPUT_BITS-1+2:0] metadata_b = 10'b1_0000_0011_0; //b type 11
+    
+    logic [OUTPUT_BITS-1+2:0] data_1 = 10'b1_0000_0001_0; //2 bytes each
+    logic [OUTPUT_BITS-1+2:0] data_2 = 10'b1_0000_0010_0; //2 bytes each
+    logic [OUTPUT_BITS-1+2:0] data_3 = 10'b1_0000_0011_0; //2 bytes each
+    logic [OUTPUT_BITS-1+2:0] data_4 = 10'b1_0000_0100_0; //2 bytes each
+    logic [OUTPUT_BITS-1+2:0] data_5 = 10'b1_0000_0101_0; //2 bytes each
+    logic [OUTPUT_BITS-1+2:0] data_6 = 10'b1_0000_0111_0; //2 bytes each
+    
+    integer i;
+    
+    initial begin
+        clk = 0;
+        reset = 1;
+        #CLK_PERIOD
+        reset = 0;
+        #CLK_PERIOD
+        
+        // send: x type, 3 data, 2 bytes each, then 3*2=6 bytes of data
+        // each has 0 and 1 apppended to start, end (lsb to msb)
+        
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = metadata_x[i];
+        end
+        
+        // check that the sample_single_byte_fsm has expected values
+        
+        jb_data = 1;
+        // can make this even longer
+        //    #(100*CLK_PERIOD)
+        
+        //send rest 6
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        
+        jb_data = 1;
+        
+////// B update
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = metadata_b[i];
+        end
+        
+        // check that the sample_single_byte_fsm has expected values
+        
+        jb_data = 1;
+        // can make this even longer
+        //    #(100*CLK_PERIOD)
+        
+        //send rest 6
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        
+        jb_data = 1;
+
+//// X update
+jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = metadata_x[i];
+        end
+        
+        // check that the sample_single_byte_fsm has expected values
+        
+        jb_data = 1;
+        // can make this even longer
+        //    #(100*CLK_PERIOD)
+        
+        //send rest 6
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        
+        jb_data = 1;
+
+//// W update
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = metadata_w[i];
+        end
+        
+        // check that the sample_single_byte_fsm has expected values
+        
+        jb_data = 1;
+        // can make this even longer
+        //    #(100*CLK_PERIOD)
+        
+        //send rest 6
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
+        
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
+
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
+        
+        jb_data = 1;
+
+        $finish;
+    end
+endmodule
+
+
 module serial_2_top_tb;
     parameter PERIOD = 3; //sample clock
     parameter OUTPUT_BITS = 8;

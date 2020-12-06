@@ -1,5 +1,141 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
+module serial_3_top #(
+    parameter PERIOD = 3, //sample clock
+    parameter OUTPUT_BITS = 8,
+    parameter COUNTER_2MS = 4, //enables till 2ms
+    parameter SAMPLE_RATE = 16,
+//    parameter MAX_OUTPUTS = 200, //output_bits * largest of w,b,x count
+    
+    parameter NUM_WEIGHTS = 6,
+    parameter NUM_BIASES = 6,
+    parameter NUM_X = 6,
+    parameter BITS_PER_WEIGHT = 16,
+    parameter BITS_PER_BIAS = 16,
+    parameter BITS_PER_X = 16,
+    
+    parameter X_TYPE = 2'b00,
+    parameter W_TYPE = 2'b01,
+    parameter B_TYPE = 2'b11
+    
+)
+(
+    input clk_100mhz,
+    input reset,
+    input jb_data,
+    output logic [NUM_WEIGHTS-1:0][BITS_PER_WEIGHT-1:0] weights,
+    output logic [NUM_BIASES-1:0][BITS_PER_BIAS-1:0] biases,
+    output logic [NUM_X-1:0][BITS_PER_X-1:0] x,
+    output logic ready_nn_update
+);
+
+    logic enable;
+    
+    sample_data_clk_2 #(.PERIOD(PERIOD)) sdc (
+        .clk_100mhz(clk_100mhz),
+        .reset(reset),
+        .enable(enable)
+    );
+    
+    logic byte_ready;
+    logic [OUTPUT_BITS-1+2:0] output_bits;
+    
+    sample_single_byte_fsm #(.OUTPUT_BITS(OUTPUT_BITS),
+        .COUNTER_2MS(COUNTER_2MS),
+        .SAMPLE_RATE(SAMPLE_RATE))
+        ssbf
+        (
+        .clk_100mhz(clk_100mhz),
+        .enable(enable),
+        .jb_data(jb_data),
+        .reset(reset),
+        .valid_data(byte_ready),
+        .output_bits(output_bits)
+        );
+    
+    logic [OUTPUT_BITS-1:0] cleaned_out;
+    assign cleaned_out = output_bits[1 +: OUTPUT_BITS]; //remove start/end bits
+    logic [1:0] output_type;
+    logic [BITS_PER_WEIGHT - 1:0] output_array;
+    logic array_ready, end_of_wbx;
+    
+    logic [BITS_PER_WEIGHT-1:0] output_index;
+    
+    parse_data_fsm_byte_outputs #(
+        .INPUT_BITS(OUTPUT_BITS),
+        .OUTPUT_BITS(BITS_PER_WEIGHT), // assumes these are 16
+        .NUM_X(NUM_X),
+        .NUM_WEIGHTS(NUM_WEIGHTS),
+        .NUM_BIASES(NUM_BIASES),
+        .BITS_PER_WEIGHT(BITS_PER_WEIGHT),
+        .BITS_PER_BIAS(BITS_PER_BIAS),
+        .BITS_PER_X(BITS_PER_X),
+        .X_TYPE(X_TYPE),
+        .W_TYPE(W_TYPE),
+        .B_TYPE(B_TYPE)
+    ) uut_fsm
+    (
+        .input_ready(byte_ready),
+        .input_value(cleaned_out),
+        .clk_100mhz(clk),
+        .reset(reset),
+        .output_type(output_type),
+        .output_array(output_array),
+        .output_valid(array_ready),
+        .output_index(output_index),
+        .end_of_wbx(end_of_wbx)
+    );
+    
+    logic updated_weights, updated_biases, updated_x;
+    
+    
+    logic wbx_update;
+    logic [1:0] wbx_type;  
+    
+    always_ff @(posedge clk_100mhz) begin
+        if (reset) begin
+            wbx_update <= 0;
+            wbx_type <= 0;
+        end
+        else begin
+            wbx_update <= 0;
+            if (array_ready) begin
+                case (output_type)
+                    X_TYPE: begin
+                        x[output_index] <= output_array;
+                    end
+                    W_TYPE: begin
+                        weights[output_index] <= output_array;
+                    end
+                    B_TYPE: begin
+                        biases[output_index] <= output_array;
+                    end
+                    default:;
+                endcase
+                
+                if (end_of_wbx) begin
+                    wbx_update <= 1;
+                    wbx_type <= output_type;
+                end
+            end
+        end
+    end
+    
+    check_wbx_all_updated #(
+        .X_TYPE(X_TYPE),
+        .W_TYPE(W_TYPE),
+        .B_TYPE(B_TYPE)
+    ) cwau (
+        .clk_100mhz(clk_100mhz),
+        .reset(reset),
+        .input_type(wbx_type),
+        .valid_input(wbx_update),
+        .wbx_all_ready(ready_nn_update)
+    );
+endmodule
+
+
+// the top serial with the large array output
 module serial_2_top #(
     parameter PERIOD = 3, //sample clock
     parameter OUTPUT_BITS = 8,
@@ -258,7 +394,8 @@ module sample_single_byte_fsm #(
 
 endmodule
 
-// todo: in progress
+// parse data fsm with small output size
+// outputs the array, the corresponding index, the type, and 1 when output valid.
 module parse_data_fsm_byte_outputs #(
     parameter INPUT_BITS = 8, // add some combo logic to deal with the 10 bit to 8 bit check
     parameter OUTPUT_BITS = 16, //max of bits per weight, bias, x
