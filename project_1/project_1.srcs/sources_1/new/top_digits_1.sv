@@ -160,16 +160,45 @@ module top_digits_1 (
             end
 
             SHOW_OUTPUT: begin // 10
-                display_data = {
-                    output_final[NUM_OUTPUTS-1][3:0],
-                    output_final[6][3:0],
-                    output_final[5][3:0],
-                    output_final[4][3:0],
-                    output_final[3][3:0],
-                    output_final[2][3:0],
-                    output_final[1][3:0],
-                    output_final[0][3:0]
-                };
+                if (sw[15:14] == 2'b00) begin
+                    display_data = {
+                        output_final[7][3:0],
+                        output_final[6][3:0],
+                        output_final[5][3:0],
+                        output_final[4][3:0],
+                        output_final[3][3:0],
+                        output_final[2][3:0],
+                        output_final[1][3:0],
+                        output_final[0][3:0]
+                    };
+                end 
+                if (sw[15:14] == 2'b01) begin // make top switch high to see upper bits
+                    display_data = {
+                        output_final[7][7:4],
+                        output_final[6][7:4],
+                        output_final[5][7:4],
+                        output_final[4][7:4],
+                        output_final[3][7:4],
+                        output_final[2][7:4],
+                        output_final[1][7:4],
+                        output_final[0][7:4]
+                    };
+                end
+                if (sw[15:14] == 2'b10) begin
+                    display_data = {
+                        24'b0,
+                        output_final[NUM_OUTPUTS-1][3:0], // 10-1=9
+                        output_final[8][3:0]
+                    };
+                end 
+                if (sw[15:14] == 2'b11) begin // make top switch high to see upper bits
+                    display_data = {
+                        24'b0,
+                        output_final[NUM_OUTPUTS-1][7:4],
+                        output_final[8][7:4]
+                    };
+                end
+                
             end
         endcase
     end
