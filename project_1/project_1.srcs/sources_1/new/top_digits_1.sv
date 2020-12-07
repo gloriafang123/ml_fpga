@@ -53,7 +53,7 @@ module top_digits_1 (
 
 
     parameter BITS_PER_WEIGHT = 16;
-    parameter DECIMAL_BITS = 4;
+    parameter DECIMAL_BITS = 8;
     parameter NUM_OUTPUTS = 10;
     parameter BITS_PER_OUTPUT = 16;
     
@@ -108,7 +108,30 @@ module top_digits_1 (
         .done(nn_done)
     );
 
-    // show that nn is done
+/// ILA
+
+    ila_0 ila_instance (
+        .clk(clk_100mhz), // input wire clk
+    
+        .probe0(output_final[0][15:0]), // input wire [15:0]  probe0  
+        .probe1(output_final[1][15:0]), // input wire [15:0]  probe1 
+        .probe2(output_final[2][15:0]), // input wire [15:0]  probe2 
+        .probe3(output_final[3][15:0]), // input wire [15:0]  probe3 
+        .probe4(output_final[4][15:0]), // input wire [15:0]  probe4 
+        .probe5(output_final[5][15:0]), // input wire [15:0]  probe5 
+        .probe6(output_final[6][15:0]), // input wire [15:0]  probe6 
+        .probe7(output_final[7][15:0]), // input wire [15:0]  probe7 
+        .probe8(output_final[8][15:0]), // input wire [15:0]  probe8 
+        .probe9(output_final[9][15:0]), // input wire [15:0]  probe9 
+        .probe10(weights[0][15:0]), // input wire [15:0]  probe10 
+        .probe11(weights[NUM_WEIGHTS-1][15:0]), // input wire [15:0]  probe11 
+        .probe12(biases[0][15:0]), // input wire [15:0]  probe12 
+        .probe13(biases[NUM_BIASES-1][15:0]) // input wire [15:0]  probe13
+    );
+///
+
+
+    // show that nn is done (pulse)
     assign led[15] = nn_done;
     parameter SHOW_OUTPUT = 2'b10;
 
