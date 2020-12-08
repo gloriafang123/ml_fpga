@@ -2,7 +2,7 @@
 ## Important files:
 Note all files are testbenched
 
-## Neural Net Files:
+### Neural Net Files:
 mnist_nn_small.sv
 
 multiplier.sv
@@ -15,23 +15,23 @@ neural_network.sv
 
 iris_nn.sv
 
-## Serial and Top Files:
+### Serial and Top Files:
 top_digits_1.sv
 
 serial_version_2.sv (includes all 5 modules)
 
-### Early versions of serial:
+#### Early versions of serial:
 uart_read.sv
 
 uart_write.sv
 
 gather_weights.sv
 
-# Python files:
-## For neural net:
+## Python files:
+### For neural net:
 (insert here)
 
-## For serial
+### For serial
 send_data.py, arduino file
 
 
