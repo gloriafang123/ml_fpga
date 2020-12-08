@@ -67,14 +67,20 @@ module top_digits_1 (
     logic ready_nn_update;
     
     logic reset;
-    assign reset = btnc;
+    debounce dbnc_instance (
+            .clk_in(clk_100mhz),
+            .rst_in(btnc),
+            .bouncey_in(btnc),
+            .clean_out(reset)
+    );
+    // assign reset = btnc;
 
     serial_3_top #(
         .PERIOD(ENABLE_PERIOD),
         .OUTPUT_BITS(OUTPUT_BITS),
         .COUNTER_2MS(COUNTER_2MS),
         .SAMPLE_RATE(SAMPLE_RATE),
-//        .MAX_OUTPUTS(MAX_OUTPUTS), // comment if using serial_3_top
+        //.MAX_OUTPUTS(MAX_OUTPUTS), // comment if using serial_3_top
         .NUM_WEIGHTS(NUM_WEIGHTS),
         .NUM_BIASES(NUM_BIASES),
         .NUM_X(NUM_X),
@@ -108,8 +114,7 @@ module top_digits_1 (
         .done(nn_done)
     );
 
-/// ILA
-
+    /// ILA
     ila_0 ila_instance (
         .clk(clk_100mhz), // input wire clk
     
@@ -128,11 +133,14 @@ module top_digits_1 (
         .probe12(biases[0][15:0]), // input wire [15:0]  probe12 
         .probe13(biases[NUM_BIASES-1][15:0]) // input wire [15:0]  probe13
     );
-///
 
 
     // show that nn is done (pulse)
-    assign led[15] = nn_done;
+    // assign led[15] = nn_done;
+    
+    // 7 seg display logic for showing some weights, biases, and x
+    
+    // switch state to show output x (also visible on ILA)
     parameter SHOW_OUTPUT = 2'b10;
 
     // use switches to show display for what values have been received
@@ -321,4 +329,26 @@ module display_8hex(
       end
 
 
+endmodule
+
+module debounce(    input  logic    clk_in, //clock in
+                    input  logic     rst_in, //reset in
+                    input  logic     bouncey_in,//raw input to the system
+                    output logic    clean_out //debounced output
+    );
+   logic [19:0] count; // is 20 bits enough? > yes because 20 bits can represent up to 2^20-1 > 1Mil
+   
+   logic old;
+   always_ff @(posedge clk_in) begin
+        old <= bouncey_in;
+        if ((old != bouncey_in) || (rst_in == 1)) begin
+            count <=  20'd0;
+        end else begin // bouncey and old are same
+            if (count == 20'd1_000_000) begin
+                clean_out <= old;
+            end
+            count <= count + 1;
+        end 
+
+   end
 endmodule
