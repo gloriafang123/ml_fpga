@@ -10,9 +10,9 @@ module serial_3_top_tb;
     parameter NUM_WEIGHTS = 6;
     parameter NUM_BIASES = 6;
     parameter NUM_X = 6;
-    parameter BITS_PER_WEIGHT = 16;
-    parameter BITS_PER_BIAS = 16;
-    parameter BITS_PER_X = 16;
+    parameter BITS_PER_WEIGHT = 24;
+    parameter BITS_PER_BIAS = 24;
+    parameter BITS_PER_X = 24;
     
     parameter X_TYPE = 2'b00;
     parameter W_TYPE = 2'b01;
@@ -105,6 +105,12 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_1[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
 
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
@@ -118,7 +124,19 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_2[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -144,6 +162,12 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_4[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
 
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
@@ -157,7 +181,19 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_5[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -201,6 +237,12 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_1[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
 
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
@@ -214,7 +256,19 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_2[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -240,6 +294,12 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_4[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
 
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
@@ -253,7 +313,19 @@ module serial_3_top_tb;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_5[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_6[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -296,6 +368,12 @@ jb_data = 1;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_1[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
 
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
@@ -309,7 +387,19 @@ jb_data = 1;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_2[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -335,7 +425,19 @@ jb_data = 1;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_4[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -360,6 +462,12 @@ jb_data = 1;
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_6[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
         end
         
         jb_data = 1;
@@ -391,6 +499,12 @@ jb_data = 1;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_1[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_1[i]; 
+        end
 
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
@@ -404,7 +518,19 @@ jb_data = 1;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_2[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_2[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_3[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -430,7 +556,19 @@ jb_data = 1;
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_4[i]; 
         end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_4[i]; 
+        end
 
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
+        end
         jb_data = 1;
         #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
@@ -455,6 +593,12 @@ jb_data = 1;
         for (i = 0; i < OUTPUT_BITS+2; i++) begin
             #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
             jb_data = data_6[i]; 
+        end
+        jb_data = 1;
+        #(PERIOD * CLK_PERIOD * COUNTER_2MS) //high for 2ms
+        for (i = 0; i < OUTPUT_BITS+2; i++) begin
+            #(PERIOD*CLK_PERIOD*SAMPLE_RATE)
+            jb_data = data_5[i]; 
         end
         
         jb_data = 1;

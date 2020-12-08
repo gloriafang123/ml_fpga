@@ -114,28 +114,3 @@ module serial_tx(   input           clk_in,
      
     end              
 endmodule
-
-
-module debounce(    input  logic    clk_in, //clock in
-                    input  logic     rst_in, //reset in
-                    input  logic     bouncey_in,//raw input to the system
-                    output logic    clean_out //debounced output
-    );
-   logic [19:0] count; // is 20 bits enough? > yes because 20 bits can represent up to 2^20-1 > 1Mil
-   
-   logic old;
-   always_ff @(posedge clk_in) begin
-        old <= bouncey_in;
-        if ((old != bouncey_in) || (rst_in == 1)) begin
-            count <=  20'd0;
-        end else begin // bouncey and old are same
-            if (count == 20'd1_000_000) begin
-                clean_out <= old;
-            end
-            count <= count + 1;
-        end 
-
-   end
-
-endmodule //debounce
-
