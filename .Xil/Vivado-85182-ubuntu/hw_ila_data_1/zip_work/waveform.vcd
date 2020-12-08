@@ -1,0 +1,51 @@
+$date
+        2020-Dec-06 20:07:47
+$end
+$version
+        Vivado v2019.2 (64-bit)
+$end
+$timescale
+        1ps
+$end
+$scope module dut $end
+$var reg 16 " \output_final[0] [15:0] $end
+$var reg 16 2 \output_final[1] [15:0] $end
+$var reg 16 B \output_final[2] [15:0] $end
+$var reg 16 R \output_final[3] [15:0] $end
+$var reg 16 b \output_final[4] [15:0] $end
+$var reg 16 r \output_final[5] [15:0] $end
+$var reg 16 $" \output_final[6] [15:0] $end
+$var reg 16 4" \output_final[7] [15:0] $end
+$var reg 16 D" \output_final[8] [15:0] $end
+$var reg 16 T" \output_final[9] [15:0] $end
+$var reg 16 d" \weights[0] [15:0] $end
+$var reg 16 t" \weights[869] [15:0] $end
+$var reg 16 &# \biases[0] [15:0] $end
+$var reg 16 6# \biases[26] [15:0] $end
+$var reg 1 F# _TRIGGER $end
+$var reg 1 G# _WINDOW $end
+$var reg 1 H# _GAP $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b100100 "
+b1110 2
+b1111111110010001 B
+b111101 R
+b1111111111011001 b
+b1111111110111100 r
+b1111111101111101 $"
+b1111111110010000 4"
+b100101 D"
+b10000 T"
+b1111111111111011 d"
+b1111111111111100 t"
+b100 &#
+b1011 6#
+0F#
+1G#
+0H#
+$end
+#512
+1F#

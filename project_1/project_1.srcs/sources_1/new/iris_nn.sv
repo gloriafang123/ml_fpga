@@ -62,7 +62,7 @@ genvar i;
 generate
     for (i=0; i<NEURONS_PER_LAYER; i=i+1) begin         
         neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS), 
-                       .NEURONS_PER_LAYER(4), 
+                       .NUM_PREVIOUS_NEURONS(4), 
                        .LOG_LENGTH(3)) fc_initial (
             .clk(clk), .rst(rst), .ready(ready),
             .length(lengths[0]), 
@@ -83,7 +83,7 @@ generate
     for (j=1; j<1+HIDDEN_LAYERS; j=j+1) begin
         for (i=0; i<NEURONS_PER_LAYER; i=i+1) begin
                 neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS), 
-                               .NEURONS_PER_LAYER(NEURONS_PER_LAYER), 
+                               .NUM_PREVIOUS_NEURONS(NEURONS_PER_LAYER), 
                                .LOG_LENGTH(LOG_LENGTH)) fc_hidden (
                 .clk(clk), .rst(rst), .ready(nn_done[j-1][0] && nn_done[j-1][1] && nn_done[j-1][2]), // remember to change this
                 .length(lengths[j]), 
@@ -102,7 +102,7 @@ generate
     for (i=0; i<OUTPUT_NEURONS; i=i+1) begin
         // final layer
         neuron #(.WIDTH(WIDTH), .DECIMALS(DECIMALS), 
-                               .NEURONS_PER_LAYER(NEURONS_PER_LAYER), 
+                               .NUM_PREVIOUS_NEURONS(NEURONS_PER_LAYER), 
                                .LOG_LENGTH(LOG_LENGTH)) fc_final (
             .clk(clk), .rst(rst), .ready(nn_done[HIDDEN_LAYERS][0] && nn_done[HIDDEN_LAYERS][1] && nn_done[HIDDEN_LAYERS][2]), // change this
             .length(lengths[HIDDEN_LAYERS+1]),

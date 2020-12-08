@@ -23,7 +23,7 @@
 
 //fc3.bias 	 tensor([1.9906])
 
-module neural_network #(parameter WIDTH = 8, DECIMALS = 3) (
+module identity_nn #(parameter WIDTH = 8, DECIMALS = 3) (
    input clk,
    input rst,
    input logic ready,

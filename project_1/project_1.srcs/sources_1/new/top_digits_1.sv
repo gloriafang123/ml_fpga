@@ -53,10 +53,11 @@ module top_digits_1 (
 
 
     parameter BITS_PER_WEIGHT = 16;
-    parameter DECIMAL_BITS = 4;
+    parameter DECIMAL_BITS = 8;
     parameter NUM_OUTPUTS = 10;
     parameter BITS_PER_OUTPUT = 16;
     
+    // only needed for serial_2_top, not needed for serial_3_top
     parameter MAX_OUTPUTS = NUM_WEIGHTS*BITS_PER_WEIGHT + 8; //fixed
 
 
@@ -68,12 +69,12 @@ module top_digits_1 (
     logic reset;
     assign reset = btnc;
 
-    serial_2_top #(
+    serial_3_top #(
         .PERIOD(ENABLE_PERIOD),
         .OUTPUT_BITS(OUTPUT_BITS),
         .COUNTER_2MS(COUNTER_2MS),
         .SAMPLE_RATE(SAMPLE_RATE),
-        .MAX_OUTPUTS(MAX_OUTPUTS),
+//        .MAX_OUTPUTS(MAX_OUTPUTS), // comment if using serial_3_top
         .NUM_WEIGHTS(NUM_WEIGHTS),
         .NUM_BIASES(NUM_BIASES),
         .NUM_X(NUM_X),
@@ -107,7 +108,30 @@ module top_digits_1 (
         .done(nn_done)
     );
 
-    // show that nn is done
+/// ILA
+
+    ila_0 ila_instance (
+        .clk(clk_100mhz), // input wire clk
+    
+        .probe0(output_final[0][15:0]), // input wire [15:0]  probe0  
+        .probe1(output_final[1][15:0]), // input wire [15:0]  probe1 
+        .probe2(output_final[2][15:0]), // input wire [15:0]  probe2 
+        .probe3(output_final[3][15:0]), // input wire [15:0]  probe3 
+        .probe4(output_final[4][15:0]), // input wire [15:0]  probe4 
+        .probe5(output_final[5][15:0]), // input wire [15:0]  probe5 
+        .probe6(output_final[6][15:0]), // input wire [15:0]  probe6 
+        .probe7(output_final[7][15:0]), // input wire [15:0]  probe7 
+        .probe8(output_final[8][15:0]), // input wire [15:0]  probe8 
+        .probe9(output_final[9][15:0]), // input wire [15:0]  probe9 
+        .probe10(weights[0][15:0]), // input wire [15:0]  probe10 
+        .probe11(weights[NUM_WEIGHTS-1][15:0]), // input wire [15:0]  probe11 
+        .probe12(biases[0][15:0]), // input wire [15:0]  probe12 
+        .probe13(biases[NUM_BIASES-1][15:0]) // input wire [15:0]  probe13
+    );
+///
+
+
+    // show that nn is done (pulse)
     assign led[15] = nn_done;
     parameter SHOW_OUTPUT = 2'b10;
 
@@ -159,16 +183,45 @@ module top_digits_1 (
             end
 
             SHOW_OUTPUT: begin // 10
-                display_data = {
-                    output_final[NUM_OUTPUTS-1][3:0],
-                    output_final[6][3:0],
-                    output_final[5][3:0],
-                    output_final[4][3:0],
-                    output_final[3][3:0],
-                    output_final[2][3:0],
-                    output_final[1][3:0],
-                    output_final[0][3:0]
-                };
+                if (sw[15:14] == 2'b00) begin
+                    display_data = {
+                        output_final[7][3:0],
+                        output_final[6][3:0],
+                        output_final[5][3:0],
+                        output_final[4][3:0],
+                        output_final[3][3:0],
+                        output_final[2][3:0],
+                        output_final[1][3:0],
+                        output_final[0][3:0]
+                    };
+                end 
+                if (sw[15:14] == 2'b01) begin // make top switch high to see upper bits
+                    display_data = {
+                        output_final[7][7:4],
+                        output_final[6][7:4],
+                        output_final[5][7:4],
+                        output_final[4][7:4],
+                        output_final[3][7:4],
+                        output_final[2][7:4],
+                        output_final[1][7:4],
+                        output_final[0][7:4]
+                    };
+                end
+                if (sw[15:14] == 2'b10) begin
+                    display_data = {
+                        24'b0,
+                        output_final[NUM_OUTPUTS-1][3:0], // 10-1=9
+                        output_final[8][3:0]
+                    };
+                end 
+                if (sw[15:14] == 2'b11) begin // make top switch high to see upper bits
+                    display_data = {
+                        24'b0,
+                        output_final[NUM_OUTPUTS-1][7:4],
+                        output_final[8][7:4]
+                    };
+                end
+                
             end
         endcase
     end
