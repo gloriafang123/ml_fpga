@@ -53,7 +53,7 @@ model.compile(
 model.fit(
   train_images,
   to_categorical(train_labels),
-  epochs=300,
+  epochs=100,
   batch_size=128,
 )
 

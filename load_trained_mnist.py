@@ -17,22 +17,25 @@ model.load_weights('model.h5')
 
 w1, b1, w2, b2, w3, b3 = list(map(lambda x:x.numpy(), model.weights))
 
+print(w1.shape)
+print(b1.shape)
+print(w2.shape)
 # test_images = mnist.test_images()
 # test_labels = mnist.test_labels()
 # test_images = test_images.reshape((-1, 784))
 # test_images = test_images / 255 - 0.5
 
-# def relu(x): 
-#     return np.maximum(0, x)
+def relu(x): 
+    return np.maximum(0, x)
 
-# def net(x):
-#     return w3.T@relu(w2.T@relu(w1.T@x+b1)+b2)+b3
+def net(x):
+    return w3.T@relu(w2.T@relu(w1.T@x+b1)+b2)+b3
 
 
 weights = []
 biases = []
 for i in [w1, w2, w3]:
-  weights.append(i.flatten().tolist())
+  weights.append(i.T.flatten().tolist())
 for i in [b1, b2, b3]:
   biases.append(i.flatten().tolist())
 

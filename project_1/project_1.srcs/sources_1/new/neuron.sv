@@ -1,27 +1,27 @@
 `timescale 1ns / 1ps
 
-module neuron #(parameter WIDTH = 8, DECIMALS = 3, NEURONS_PER_LAYER = 3, LOG_LENGTH = 2) (
+module neuron #(parameter WIDTH = 8, DECIMALS = 3, NUM_PREVIOUS_NEURONS = 3, LOG_LENGTH = 2) (
     input clk,
     input rst,
-    input logic ready,
-    input logic [LOG_LENGTH-1:0] length, // dimension of weight matrix
-    input logic [NEURONS_PER_LAYER-1:0] [WIDTH-1:0] weights, // w[i], TODO(parametrize)
-    input logic [WIDTH-1:0] bias, // b
-    input logic [NEURONS_PER_LAYER-1:0] [WIDTH-1:0] previous_neurons, // x[i], TODO(parametrize)
-    output logic done,
+    input logic ready, // ready signal to ensure neuron only starts after previous neuron finishes
+    input logic [LOG_LENGTH-1:0] length, // dimension of weights and previous neurons
+    input logic [NUM_PREVIOUS_NEURONS-1:0] [WIDTH-1:0] weights,
+    input logic [WIDTH-1:0] bias,
+    input logic [NUM_PREVIOUS_NEURONS-1:0] [WIDTH-1:0] previous_neurons, // output of previous layer
+    output logic done, // done signal when neuron is fully finished computing
     output logic [WIDTH-1:0] neuron_output // sum of w[i] x[i] + b
 );
     
     logic [WIDTH-1:0] w_i;
     logic [WIDTH-1:0] x_i;
     logic [WIDTH-1:0] product_i; // product holds w_i * x_i at each step
-    multiplier #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) product_calculator (
+    multiplier #(.WIDTH(WIDTH), .DECIMALS(DECIMALS)) product_calculator ( // fixed point mult
         .x(x_i),
         .y(w_i),
         .product(product_i)
     );
     
-    logic [10:0] i; // TODO: parametrize
+    logic [LOG_LENGTH:0] i; // iterator over dimensions in sum_i w_i x_i
     logic counting; // whether or not module is counting
     always_ff @(posedge clk) begin
         if (rst) begin 
@@ -54,5 +54,4 @@ module neuron #(parameter WIDTH = 8, DECIMALS = 3, NEURONS_PER_LAYER = 3, LOG_LE
             counting <= 0;
         end
     end
-
 endmodule
