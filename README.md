@@ -1,21 +1,30 @@
 # ml_fpga
 ## Important files:
+Note all files are testbenched
 
 ## Neural Net Files:
 mnist_nn_small.sv
+
 multiplier.sv
+
 neuron.sv
+
 relu.sv
+
 neural_network.sv
+
 iris_nn.sv
 
 ## Serial and Top Files:
 top_digits_1.sv
+
 serial_version_2.sv (includes all 5 modules)
 
 ### Early versions of serial:
 uart_read.sv
+
 uart_write.sv
+
 gather_weights.sv
 
 # Python files:
@@ -28,6 +37,7 @@ send_data.py, arduino file
 
 # Instructions
 Send data using send_data.py (weights, biases, x)
+
 Watch the final_output update in the ILA (or on seven_seg)!
 
 
