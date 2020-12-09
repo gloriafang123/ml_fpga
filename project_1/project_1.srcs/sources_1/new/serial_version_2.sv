@@ -101,7 +101,7 @@ module serial_3_top #(
     always_ff @(posedge clk_100mhz) begin
         if (reset) begin
             wbx_update <= 0;
-            wbx_type <= 0;
+            wbx_type <= 2'b10; // this one is not equal to any existing type.
         end
         else begin
             wbx_update <= 0;

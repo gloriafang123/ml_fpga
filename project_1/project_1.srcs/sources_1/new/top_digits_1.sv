@@ -248,6 +248,16 @@ module top_digits_1 (
             led[0] <= ~led[0]; //change status if new update
         end
     end
+    
+    // added this for visual (doesnt change anything)
+    always_ff @(posedge clk_100mhz) begin
+        if (reset) begin
+            led[1] <= 0;
+        end
+        if (nn_done) begin
+            led[1] <= ~led[1]; //change status if new update
+        end
+    end
 
 
 endmodule
